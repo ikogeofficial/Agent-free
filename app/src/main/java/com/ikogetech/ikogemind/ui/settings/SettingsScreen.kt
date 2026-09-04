@@ -58,11 +58,16 @@ fun SettingsScreen(
     var geminiInput by remember { mutableStateOf("") }
     var openRouterInput by remember { mutableStateOf("") }
     var showClearConfirm by remember { mutableStateOf(false) }
-    var geminiJustSaved by remember { mutableStateOf(false) }
-    var openRouterJustSaved by remember { mutableStateOf(false) }
 
     LaunchedEffect(savedGeminiKey) { geminiInput = savedGeminiKey.orEmpty() }
     LaunchedEffect(savedOpenRouterKey) { openRouterInput = savedOpenRouterKey.orEmpty() }
+
+    // "Saved" is derived from whether the field matches what's actually persisted,
+    // not a separate flag — a flag reset to false on every recomposition (e.g. when
+    // navigating back to this screen), which made an already-saved key look unsaved
+    // and prompted the user to re-save something that was already stored.
+    val geminiSaved = geminiInput.isNotBlank() && geminiInput == savedGeminiKey.orEmpty()
+    val openRouterSaved = openRouterInput.isNotBlank() && openRouterInput == savedOpenRouterKey.orEmpty()
 
     Scaffold(
         topBar = {
@@ -94,34 +99,28 @@ fun SettingsScreen(
 
             OutlinedTextField(
                 value = geminiInput,
-                onValueChange = { geminiInput = it; geminiJustSaved = false },
+                onValueChange = { geminiInput = it },
                 label = { Text("Gemini API key") },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth()
             )
-            Button(onClick = {
-                viewModel.saveGeminiKey(geminiInput)
-                geminiJustSaved = true
-            }) {
-                Text(if (geminiJustSaved) "Saved" else "Save Gemini key")
+            Button(onClick = { viewModel.saveGeminiKey(geminiInput) }) {
+                Text(if (geminiSaved) "Saved" else "Save Gemini key")
             }
 
             OutlinedTextField(
                 value = openRouterInput,
-                onValueChange = { openRouterInput = it; openRouterJustSaved = false },
+                onValueChange = { openRouterInput = it },
                 label = { Text("OpenRouter API key") },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth()
             )
-            Button(onClick = {
-                viewModel.saveOpenRouterKey(openRouterInput)
-                openRouterJustSaved = true
-            }) {
-                Text(if (openRouterJustSaved) "Saved" else "Save OpenRouter key")
+            Button(onClick = { viewModel.saveOpenRouterKey(openRouterInput) }) {
+                Text(if (openRouterSaved) "Saved" else "Save OpenRouter key")
             }
 
             // "No API key set" empty state lives in Chat screen's Error path when
