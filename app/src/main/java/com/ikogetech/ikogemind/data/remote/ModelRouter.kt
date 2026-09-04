@@ -20,8 +20,12 @@ class ModelRouterException(message: String, val isRateLimit: Boolean) : Exceptio
 /**
  * Routing logic per model-routing.md v1:
  * 1. Default to Gemini free tier.
- * 2. If Gemini quota/rate limit is hit (HTTP 429, or 5xx as a broader "unavailable"
- *    signal), fall back to the first working OpenRouter free model.
+ * 2. If the Gemini call fails for ANY reason (quota/rate limit, bad model id,
+ *    transient 5xx, etc.) and an OpenRouter key is configured, fall back to the
+ *    first working OpenRouter free model. Originally this only fell back on
+ *    429/5xx, but a plain 404 (e.g. a stale/retired Gemini model id) shouldn't
+ *    dead-end the user when a working fallback provider is right there —
+ *    that's exactly the failure mode that bit us in testing.
  * 3. Caller (ModelStep) is responsible for persisting which provider actually served
  *    the response.
  *
@@ -72,13 +76,15 @@ class ModelRouter(private val settingsRepository: SettingsRepository) {
                 return callGemini(geminiKey, history)
             } catch (e: HttpException) {
                 val rateLimited = e.code() == 429 || e.code() in 500..599
-                if (!rateLimited || openRouterKey.isNullOrBlank()) {
+                if (openRouterKey.isNullOrBlank()) {
                     throw ModelRouterException(
                         "Gemini call failed (${e.code()}) and no fallback available.",
                         isRateLimit = rateLimited
                     )
                 }
-                // fall through to OpenRouter below
+                // Any Gemini HTTP failure falls through to OpenRouter below as long
+                // as a fallback key exists — see class-level doc for why this isn't
+                // narrowed to just rate-limit codes.
             }
         }
 
