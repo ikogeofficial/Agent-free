@@ -18,12 +18,13 @@ interface OpenRouterApi {
 
     companion object {
         const val BASE_URL = "https://openrouter.ai/"
-        // ASSUMPTION: fill in the actual free-tier model slugs to enable at launch —
-        // see model-routing.md TODO "Specific OpenRouter free models to enable".
+        // OpenRouter's own auto-router for free models — it picks from whatever
+        // free models are currently live on their end, so we're not stuck
+        // maintaining a hardcoded list of model slugs that silently go stale
+        // (which is exactly what happened here: the original hardcoded list
+        // returned 404s once those specific free slugs were retired).
         val FREE_MODEL_FALLBACK_ORDER = listOf(
-            "meta-llama/llama-3.1-8b-instruct:free",
-            "mistralai/mistral-7b-instruct:free",
-            "qwen/qwen-2-7b-instruct:free"
+            "openrouter/free"
         )
     }
 }
