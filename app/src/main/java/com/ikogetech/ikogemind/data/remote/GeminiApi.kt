@@ -22,9 +22,11 @@ interface GeminiApi {
 
     companion object {
         const val BASE_URL = "https://generativelanguage.googleapis.com/"
-        // ASSUMPTION: gemini-1.5-flash is the free-tier default model. Confirm current
-        // free-tier model name/limits before shipping — see model-routing.md TODO.
-        const val DEFAULT_MODEL = "gemini-1.5-flash"
+        // gemini-1.5-flash was retired; current free-tier default as of Sept 2026
+        // is gemini-3.8-flash. Google ships new model generations frequently —
+        // if this starts 404ing again, check https://ai.google.dev/gemini-api/docs/models
+        // for the current model id before assuming something else broke.
+        const val DEFAULT_MODEL = "gemini-3.8-flash"
     }
 }
 
