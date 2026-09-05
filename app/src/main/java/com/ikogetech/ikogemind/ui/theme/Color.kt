@@ -2,13 +2,15 @@ package com.ikogetech.ikogemind.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// ASSUMPTION: brand-notes.md leaves the color palette as "to fill in" — this is a
-// neutral technical-tool palette (dark slate + one accent) chosen to match the
-// "practical, not startup-marketing" tone. Swap freely once real brand colors from
-// the Ikogetech channel are decided.
-val IkogeBackground = Color(0xFF121316)
-val IkogeSurface = Color(0xFF1C1E22)
-val IkogeAccent = Color(0xFF5EEAD4)
-val IkogeOnBackground = Color(0xFFE7E9EA)
-val IkogeOnSurfaceMuted = Color(0xFF9AA0A6)
+// Design direction (frontend-design pass, chat inspiration review): a restrained,
+// technical-tool palette — near-black base, one blue-violet accent reserved for a
+// small set of "this is active" moments (send button, active-model chip, streaming
+// indicator). Deliberately not the glossy fintech-blue or acid-green looks reviewed
+// alongside this, per brand-notes.md "practical, not startup-marketing" tone.
+val IkogeBackground = Color(0xFF0A0A0C)
+val IkogeSurface = Color(0xFF161618)
+val IkogeSurfaceVariant = Color(0xFF1F1F23)
+val IkogeAccent = Color(0xFF5B7FFF)
+val IkogeOnBackground = Color(0xFFEDEDEF)
+val IkogeOnSurfaceMuted = Color(0xFF9A9AA2)
 val IkogeError = Color(0xFFEF6461)
