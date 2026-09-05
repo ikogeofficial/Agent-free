@@ -17,22 +17,29 @@ class SettingsViewModel(
     val geminiApiKey: StateFlow<String?> =
         settingsRepository.geminiApiKey.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    val openRouterApiKey: StateFlow<String?> =
-        settingsRepository.openRouterApiKey.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    val openRouterLlamaKey: StateFlow<String?> =
+        settingsRepository.openRouterLlamaKey.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    val preferredProvider: StateFlow<String> =
-        settingsRepository.preferredProvider.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "auto")
+    val openRouterQwenCoderKey: StateFlow<String?> =
+        settingsRepository.openRouterQwenCoderKey.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    val openRouterGptOssKey: StateFlow<String?> =
+        settingsRepository.openRouterGptOssKey.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     fun saveGeminiKey(key: String) {
         viewModelScope.launch { settingsRepository.setGeminiApiKey(key) }
     }
 
-    fun saveOpenRouterKey(key: String) {
-        viewModelScope.launch { settingsRepository.setOpenRouterApiKey(key) }
+    fun saveOpenRouterLlamaKey(key: String) {
+        viewModelScope.launch { settingsRepository.setOpenRouterLlamaKey(key) }
     }
 
-    fun setPreferredProvider(provider: String) {
-        viewModelScope.launch { settingsRepository.setPreferredProvider(provider) }
+    fun saveOpenRouterQwenCoderKey(key: String) {
+        viewModelScope.launch { settingsRepository.setOpenRouterQwenCoderKey(key) }
+    }
+
+    fun saveOpenRouterGptOssKey(key: String) {
+        viewModelScope.launch { settingsRepository.setOpenRouterGptOssKey(key) }
     }
 
     fun clearHistory() {
