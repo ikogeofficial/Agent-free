@@ -78,8 +78,7 @@ fun SettingsScreen(
         ) {
             Text("API keys", style = MaterialTheme.typography.titleMedium)
             Text(
-                "Stored on-device. Not encrypted yet in v1 — see SettingsRepository " +
-                    "for the flagged TODO before this goes beyond personal testing.",
+                "Encrypted on-device with Android Keystore before storage.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
