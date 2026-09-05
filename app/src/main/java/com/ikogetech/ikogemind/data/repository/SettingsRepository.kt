@@ -13,44 +13,65 @@ private val Context.dataStore by preferencesDataStore(name = "ikogemind_settings
 /**
  * ASSUMPTION (flagged, per model-routing.md TODO "API keys management approach"):
  * using Jetpack DataStore Preferences for now, in plaintext on-device storage.
- * This is NOT encrypted at rest. Fine for personal testing (v1), but before this
- * goes to any other user, swap the underlying storage for EncryptedSharedPreferences
- * or the Security-Crypto DataStore wrapper. Call sites below don't need to change,
- * only the implementation of get/set.
+ * This is NOT encrypted at rest yet — the decided v1 approach is DataStore +
+ * manual Android Keystore AES (not EncryptedSharedPreferences, which Google
+ * deprecated in 2025) — that encryption layer is a separate follow-up. Call sites
+ * below don't need to change when it lands, only the implementation of get/set.
+ *
+ * Four keys total: Gemini, plus one OpenRouter key PER hand-picked model (Llama
+ * 3.1 405B / Qwen3 Coder / gpt-oss-120b) — per the "one key per model" fallback
+ * decision, not one shared OpenRouter key. There's no "preferred provider" setting
+ * here; v1 is a single fixed fallback chain (see ModelRouter), not user-selectable
+ * per decisions-log.md "global model default only" — a prior preferredProvider
+ * field existed but was never actually read by ModelRouter, so it's removed here
+ * rather than left as dead state that implied a control that didn't exist.
  */
 class SettingsRepository(private val context: Context) {
 
     private object Keys {
         val GEMINI_API_KEY = stringPreferencesKey("gemini_api_key")
-        val OPENROUTER_API_KEY = stringPreferencesKey("openrouter_api_key")
-        val PREFERRED_PROVIDER = stringPreferencesKey("preferred_provider") // "auto" | "gemini" | "openrouter"
+        val OPENROUTER_KEY_LLAMA = stringPreferencesKey("openrouter_key_llama_3_1_405b")
+        val OPENROUTER_KEY_QWEN_CODER = stringPreferencesKey("openrouter_key_qwen3_coder")
+        val OPENROUTER_KEY_GPT_OSS = stringPreferencesKey("openrouter_key_gpt_oss_120b")
     }
 
     val geminiApiKey: Flow<String?> =
         context.dataStore.data.map { it[Keys.GEMINI_API_KEY] }
 
-    val openRouterApiKey: Flow<String?> =
-        context.dataStore.data.map { it[Keys.OPENROUTER_API_KEY] }
+    val openRouterLlamaKey: Flow<String?> =
+        context.dataStore.data.map { it[Keys.OPENROUTER_KEY_LLAMA] }
 
-    val preferredProvider: Flow<String> =
-        context.dataStore.data.map { it[Keys.PREFERRED_PROVIDER] ?: "auto" }
+    val openRouterQwenCoderKey: Flow<String?> =
+        context.dataStore.data.map { it[Keys.OPENROUTER_KEY_QWEN_CODER] }
+
+    val openRouterGptOssKey: Flow<String?> =
+        context.dataStore.data.map { it[Keys.OPENROUTER_KEY_GPT_OSS] }
 
     suspend fun setGeminiApiKey(key: String) {
         context.dataStore.edit { it[Keys.GEMINI_API_KEY] = key }
     }
 
-    suspend fun setOpenRouterApiKey(key: String) {
-        context.dataStore.edit { it[Keys.OPENROUTER_API_KEY] = key }
+    suspend fun setOpenRouterLlamaKey(key: String) {
+        context.dataStore.edit { it[Keys.OPENROUTER_KEY_LLAMA] = key }
     }
 
-    suspend fun setPreferredProvider(provider: String) {
-        context.dataStore.edit { it[Keys.PREFERRED_PROVIDER] = provider }
+    suspend fun setOpenRouterQwenCoderKey(key: String) {
+        context.dataStore.edit { it[Keys.OPENROUTER_KEY_QWEN_CODER] = key }
     }
 
-    /** Synchronous-ish snapshot helper for the router, which needs a key at call time. */
+    suspend fun setOpenRouterGptOssKey(key: String) {
+        context.dataStore.edit { it[Keys.OPENROUTER_KEY_GPT_OSS] = key }
+    }
+
+    /** Synchronous-ish snapshot helpers for the router, which needs keys at call time. */
     suspend fun currentGeminiKey(): String? = geminiApiKey.first()
-    suspend fun currentOpenRouterKey(): String? = openRouterApiKey.first()
+    suspend fun currentOpenRouterLlamaKey(): String? = openRouterLlamaKey.first()
+    suspend fun currentOpenRouterQwenCoderKey(): String? = openRouterQwenCoderKey.first()
+    suspend fun currentOpenRouterGptOssKey(): String? = openRouterGptOssKey.first()
 
     suspend fun hasAnyKeyConfigured(): Boolean =
-        !currentGeminiKey().isNullOrBlank() || !currentOpenRouterKey().isNullOrBlank()
+        !currentGeminiKey().isNullOrBlank() ||
+            !currentOpenRouterLlamaKey().isNullOrBlank() ||
+            !currentOpenRouterQwenCoderKey().isNullOrBlank() ||
+            !currentOpenRouterGptOssKey().isNullOrBlank()
 }
