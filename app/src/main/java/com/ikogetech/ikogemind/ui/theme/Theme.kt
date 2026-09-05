@@ -9,9 +9,11 @@ import androidx.compose.runtime.Composable
 private val DarkColors = darkColorScheme(
     background = IkogeBackground,
     surface = IkogeSurface,
+    surfaceVariant = IkogeSurfaceVariant,
     primary = IkogeAccent,
     onBackground = IkogeOnBackground,
     onSurface = IkogeOnBackground,
+    onSurfaceVariant = IkogeOnSurfaceMuted,
     error = IkogeError
 )
 
