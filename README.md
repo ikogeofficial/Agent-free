@@ -7,9 +7,9 @@ and `decisions-log.md` for the full context this build follows.
 
 ## Status
 
-v1 skeleton — compiles-in-spirit, not yet opened in Android Studio / run. Every
-screen, ViewModel, DAO, pipeline step, and network client described in
-`architecture.md` exists as real Kotlin, wired end to end:
+v1 skeleton — every screen, ViewModel, DAO, pipeline step, and network client
+described in `architecture.md` exists as real Kotlin, wired end to end, and
+compiles clean via CI:
 
 ```
 ChatScreen → ChatViewModel → PipelineOrchestrator
@@ -21,14 +21,14 @@ ChatScreen → ChatViewModel → PipelineOrchestrator
 
 1. Open the `IkogeMind/` folder in Android Studio (Koala+ recommended).
 2. Let Gradle sync — it will pull dependencies from `app/build.gradle.kts`.
-3. In Settings screen (once running), paste a Gemini AI Studio API key and/or an
-   OpenRouter API key. Nothing works without at least one.
+3. In Settings screen (once running), paste a Gemini AI Studio API key and/or
+   any of the three OpenRouter keys (Llama 3.1 405B / Qwen3 Coder / gpt-oss-120b).
+   Nothing works without at least one.
 4. Run on a device/emulator with API 26+.
 
-The Gradle wrapper scripts/jar aren't committed to this repo (this project was
-pushed via the GitHub API from a sandbox that can't safely transmit binary file
-content, and the wrapper jar is binary). Two ways to get a working `./gradlew`
-locally:
+The Gradle wrapper scripts/jar aren't committed to this repo (pushed via the
+GitHub API from a sandbox that can't safely transmit binary file content, and
+the wrapper jar is binary). Two ways to get a working `./gradlew` locally:
 - Open the project in Android Studio — it offers to generate the wrapper
   automatically.
 - Or run `gradle wrapper --gradle-version 8.7` once if you have Gradle installed.
@@ -43,25 +43,25 @@ wrapper jar. Grab the APK from the workflow run's Artifacts tab.
 
 ## Known gaps / next decisions (flagged, not blocking)
 
-- **API key storage is plaintext DataStore**, not encrypted. Fine for solo personal
-  testing; swap for `EncryptedSharedPreferences` before this reaches anyone else.
-  See `SettingsRepository.kt`.
 - **Non-streaming model calls.** Both `GeminiApi` and `OpenRouterApi` call
   non-streaming endpoints and return the full response at once. The "Streaming"
   chat state currently just means "waiting on the pipeline." True token-by-token
   streaming is a real upgrade, isolated to `ModelStep` + the Gemini/OpenRouter
   clients — nothing else needs to change.
-- **OpenRouter free model list is a guess** (`OpenRouterApi.FREE_MODEL_FALLBACK_ORDER`).
-  Confirm current free-tier slugs before relying on it — this was flagged as a TODO
-  in `model-routing.md` and wasn't resolved here.
-- **Preferred-provider setting is stored but not yet read** by `ModelRouter` — it
-  always does Gemini-first/OpenRouter-fallback regardless of the Settings screen
-  selection. Wiring it in is a small, contained change to `ModelRouter.sendMessage`.
-- **No app icon / brand colors** — placeholder vector mark and a neutral dark
-  palette, per `brand-notes.md`'s own "to fill in" list.
+- **No app icon / brand colors** — placeholder vector mark; the in-app palette
+  (background/accent/text tokens) is set per `brand-notes.md`, but no launcher
+  icon exists yet.
 - **Conversation rename/delete-from-list UI** isn't built (delete method exists in
   `ChatRepository`/`ConversationListViewModel`, no UI trigger yet) — matches
   `screens-and-flows.md`'s "not decided yet."
+
+Resolved since the list above was first written: API keys are now encrypted at
+rest via Android Keystore AES-GCM (`KeystoreCrypto.kt`), not plaintext; the
+OpenRouter fallback is 3 hand-picked, individually-keyed free models
+(Llama 3.1 405B → Qwen3 Coder → gpt-oss-120b) with an auto-router safety net,
+not a guessed single slug; and the dead "preferred provider" setting (stored
+but never read by `ModelRouter`) was removed rather than left as confusing
+unused state.
 
 ## Why no Hilt / DI framework
 
