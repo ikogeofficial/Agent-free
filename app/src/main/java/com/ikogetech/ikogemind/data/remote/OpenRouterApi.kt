@@ -18,14 +18,21 @@ interface OpenRouterApi {
 
     companion object {
         const val BASE_URL = "https://openrouter.ai/"
-        // OpenRouter's own auto-router for free models — it picks from whatever
-        // free models are currently live on their end, so we're not stuck
-        // maintaining a hardcoded list of model slugs that silently go stale
-        // (which is exactly what happened here: the original hardcoded list
-        // returned 404s once those specific free slugs were retired).
-        val FREE_MODEL_FALLBACK_ORDER = listOf(
-            "openrouter/free"
-        )
+
+        // Hand-picked fallback order (decisions-log.md), each behind its own
+        // OpenRouter API key so a single account's rate limit doesn't gate all
+        // three. Slugs verified directly against openrouter.ai model pages,
+        // Sept 2026 — but free slugs on OpenRouter rotate out with little notice
+        // (this has bitten this codebase before), so ModelRouter falls back to
+        // AUTO_ROUTER below if all three fail.
+        const val LLAMA_3_1_405B = "meta-llama/llama-3.1-405b-instruct:free"
+        const val QWEN3_CODER = "qwen/qwen3-coder:free"
+        const val GPT_OSS_120B = "openai/gpt-oss-120b:free"
+
+        // Safety net only — OpenRouter's own auto-router, picks whatever free
+        // model is currently live. Tried once, only after all three hand-picked
+        // models above have failed.
+        const val AUTO_ROUTER = "openrouter/free"
     }
 }
 
