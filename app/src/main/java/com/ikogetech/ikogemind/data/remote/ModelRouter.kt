@@ -1,6 +1,7 @@
 package com.ikogetech.ikogemind.data.remote
 
 import com.ikogetech.ikogemind.data.repository.SettingsRepository
+import kotlinx.coroutines.delay
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
@@ -12,26 +13,27 @@ data class ChatTurn(val role: String, val content: String)
 
 data class ModelResult(
     val text: String,
-    val providerUsed: String // e.g. "gemini" or "openrouter:meta-llama/llama-3.1-8b-instruct:free"
+    val providerUsed: String // e.g. "gemini" or "openrouter:meta-llama/llama-3.1-405b-instruct:free"
 )
 
 class ModelRouterException(message: String, val isRateLimit: Boolean) : Exception(message)
 
 /**
- * Routing logic per model-routing.md v1:
- * 1. Default to Gemini free tier.
- * 2. If the Gemini call fails for ANY reason (quota/rate limit, bad model id,
- *    transient 5xx, etc.) and an OpenRouter key is configured, fall back to the
- *    first working OpenRouter free model. Originally this only fell back on
- *    429/5xx, but a plain 404 (e.g. a stale/retired Gemini model id) shouldn't
- *    dead-end the user when a working fallback provider is right there —
- *    that's exactly the failure mode that bit us in testing.
- * 3. Caller (ModelStep) is responsible for persisting which provider actually served
- *    the response.
- *
- * Deliberately NOT task-based routing yet — see model-routing.md "Not in v1".
- * Adding a third provider later should only mean adding another branch here; nothing
- * upstream (pipeline, ViewModel, UI) needs to know provider details.
+ * Routing logic per the fallback-ordering decision (decisions-log.md):
+ * 1. Gemini first, with ONE quick retry (short backoff) on a transient failure
+ *    (429/5xx) before counting it as failed — most rate-limit hits are transient,
+ *    so this alone absorbs a chunk of would-be errors. A non-transient failure
+ *    (bad request, 404, etc.) falls through immediately without wasting a retry.
+ * 2. On confirmed Gemini failure, fall through OpenRouter's three hand-picked free
+ *    models in a fixed order, each behind its OWN API key (one key per model, per
+ *    decision) — Llama 3.1 405B -> Qwen3 Coder -> gpt-oss-120b. One attempt each,
+ *    no retry per model; a missing key or failed call just moves to the next.
+ * 3. Free OpenRouter slugs rotate out with little notice — this is what caused the
+ *    original hardcoded-list 404s during testing. As a last safety net before
+ *    giving up, try OpenRouter's own "openrouter/free" auto-router once, using
+ *    whichever of the three keys is available, so one retired slug doesn't
+ *    dead-end the user.
+ * 4. Caller (ModelStep) persists which provider actually served the response.
  */
 class ModelRouter(private val settingsRepository: SettingsRepository) {
 
@@ -62,9 +64,14 @@ class ModelRouter(private val settingsRepository: SettingsRepository) {
 
     suspend fun sendMessage(history: List<ChatTurn>): ModelResult {
         val geminiKey = settingsRepository.currentGeminiKey()
-        val openRouterKey = settingsRepository.currentOpenRouterKey()
+        val llamaKey = settingsRepository.currentOpenRouterLlamaKey()
+        val qwenCoderKey = settingsRepository.currentOpenRouterQwenCoderKey()
+        val gptOssKey = settingsRepository.currentOpenRouterGptOssKey()
 
-        if (geminiKey.isNullOrBlank() && openRouterKey.isNullOrBlank()) {
+        val anyOpenRouterKey =
+            !llamaKey.isNullOrBlank() || !qwenCoderKey.isNullOrBlank() || !gptOssKey.isNullOrBlank()
+
+        if (geminiKey.isNullOrBlank() && !anyOpenRouterKey) {
             throw ModelRouterException(
                 "No API key configured. Add one in Settings.",
                 isRateLimit = false
@@ -72,27 +79,62 @@ class ModelRouter(private val settingsRepository: SettingsRepository) {
         }
 
         if (!geminiKey.isNullOrBlank()) {
+            callGeminiWithRetry(geminiKey, history)?.let { return it }
+            // Gemini exhausted its one retry (or failed non-transiently) — fall
+            // through to OpenRouter below.
+        }
+
+        // Fixed hand-picked order, one attempt each, own key per model.
+        val openRouterAttempts = listOf(
+            llamaKey to OpenRouterApi.LLAMA_3_1_405B,
+            qwenCoderKey to OpenRouterApi.QWEN3_CODER,
+            gptOssKey to OpenRouterApi.GPT_OSS_120B
+        )
+
+        for ((key, model) in openRouterAttempts) {
+            if (key.isNullOrBlank()) continue
             try {
-                return callGemini(geminiKey, history)
-            } catch (e: HttpException) {
-                val rateLimited = e.code() == 429 || e.code() in 500..599
-                if (openRouterKey.isNullOrBlank()) {
-                    throw ModelRouterException(
-                        "Gemini call failed (${e.code()}) and no fallback available.",
-                        isRateLimit = rateLimited
-                    )
-                }
-                // Any Gemini HTTP failure falls through to OpenRouter below as long
-                // as a fallback key exists — see class-level doc for why this isn't
-                // narrowed to just rate-limit codes.
+                return callOpenRouter(key, model, history)
+            } catch (e: Exception) {
+                // try next hand-picked model
             }
         }
 
-        if (!openRouterKey.isNullOrBlank()) {
-            return callOpenRouter(openRouterKey, history)
+        // Last safety net: a specific free slug may have been retired (see
+        // OpenRouterApi companion doc). Try the auto-router once with whichever
+        // key is available before giving up entirely.
+        val fallbackKey = llamaKey ?: qwenCoderKey ?: gptOssKey
+        if (!fallbackKey.isNullOrBlank()) {
+            try {
+                return callOpenRouter(fallbackKey, OpenRouterApi.AUTO_ROUTER, history)
+            } catch (e: Exception) {
+                // fall through to final failure below
+            }
         }
 
         throw ModelRouterException("All configured providers failed.", isRateLimit = false)
+    }
+
+    /**
+     * Returns a result on success, or null once Gemini has confirmed-failed (either
+     * a non-transient error, or a transient one that also failed on the single retry).
+     */
+    private suspend fun callGeminiWithRetry(apiKey: String, history: List<ChatTurn>): ModelResult? {
+        repeat(2) { attempt ->
+            try {
+                return callGemini(apiKey, history)
+            } catch (e: HttpException) {
+                val transient = e.code() == 429 || e.code() in 500..599
+                if (attempt == 0 && transient) {
+                    delay(1500)
+                } else {
+                    return null
+                }
+            } catch (e: Exception) {
+                return null // non-HTTP failure (e.g. network) — don't retry, fall through
+            }
+        }
+        return null
     }
 
     private suspend fun callGemini(apiKey: String, history: List<ChatTurn>): ModelResult {
@@ -119,29 +161,15 @@ class ModelRouter(private val settingsRepository: SettingsRepository) {
         return ModelResult(text = text, providerUsed = "gemini")
     }
 
-    private suspend fun callOpenRouter(apiKey: String, history: List<ChatTurn>): ModelResult {
-        var lastError: Exception? = null
-
-        for (model in OpenRouterApi.FREE_MODEL_FALLBACK_ORDER) {
-            try {
-                val response = openRouterApi.chatCompletion(
-                    bearerToken = "Bearer $apiKey",
-                    request = OpenRouterRequest(
-                        model = model,
-                        messages = history.map { OpenRouterMessage(role = it.role, content = it.content) }
-                    )
-                )
-                val text = response.choices?.firstOrNull()?.message?.content.orEmpty()
-                return ModelResult(text = text, providerUsed = "openrouter:$model")
-            } catch (e: Exception) {
-                lastError = e
-                // try next free model in the fallback order
-            }
-        }
-
-        throw ModelRouterException(
-            "All OpenRouter free models failed: ${lastError?.message}",
-            isRateLimit = false
+    private suspend fun callOpenRouter(apiKey: String, model: String, history: List<ChatTurn>): ModelResult {
+        val response = openRouterApi.chatCompletion(
+            bearerToken = "Bearer $apiKey",
+            request = OpenRouterRequest(
+                model = model,
+                messages = history.map { OpenRouterMessage(role = it.role, content = it.content) }
+            )
         )
+        val text = response.choices?.firstOrNull()?.message?.content.orEmpty()
+        return ModelResult(text = text, providerUsed = "openrouter:$model")
     }
 }
