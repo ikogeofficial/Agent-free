@@ -2,7 +2,6 @@ package com.ikogetech.ikogemind.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -14,7 +13,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -52,22 +50,11 @@ fun SettingsScreen(
     )
 
     val savedGeminiKey by viewModel.geminiApiKey.collectAsState()
-    val savedOpenRouterKey by viewModel.openRouterApiKey.collectAsState()
-    val preferredProvider by viewModel.preferredProvider.collectAsState()
+    val savedLlamaKey by viewModel.openRouterLlamaKey.collectAsState()
+    val savedQwenCoderKey by viewModel.openRouterQwenCoderKey.collectAsState()
+    val savedGptOssKey by viewModel.openRouterGptOssKey.collectAsState()
 
-    var geminiInput by remember { mutableStateOf("") }
-    var openRouterInput by remember { mutableStateOf("") }
     var showClearConfirm by remember { mutableStateOf(false) }
-
-    LaunchedEffect(savedGeminiKey) { geminiInput = savedGeminiKey.orEmpty() }
-    LaunchedEffect(savedOpenRouterKey) { openRouterInput = savedOpenRouterKey.orEmpty() }
-
-    // "Saved" is derived from whether the field matches what's actually persisted,
-    // not a separate flag — a flag reset to false on every recomposition (e.g. when
-    // navigating back to this screen), which made an already-saved key look unsaved
-    // and prompted the user to re-save something that was already stored.
-    val geminiSaved = geminiInput.isNotBlank() && geminiInput == savedGeminiKey.orEmpty()
-    val openRouterSaved = openRouterInput.isNotBlank() && openRouterInput == savedOpenRouterKey.orEmpty()
 
     Scaffold(
         topBar = {
@@ -97,56 +84,40 @@ fun SettingsScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            OutlinedTextField(
-                value = geminiInput,
-                onValueChange = { geminiInput = it },
-                label = { Text("Gemini API key") },
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.fillMaxWidth()
+            ApiKeyField(
+                label = "Gemini API key",
+                savedKey = savedGeminiKey,
+                onSave = viewModel::saveGeminiKey
             )
-            Button(onClick = { viewModel.saveGeminiKey(geminiInput) }) {
-                Text(if (geminiSaved) "Saved" else "Save Gemini key")
-            }
-
-            OutlinedTextField(
-                value = openRouterInput,
-                onValueChange = { openRouterInput = it },
-                label = { Text("OpenRouter API key") },
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Button(onClick = { viewModel.saveOpenRouterKey(openRouterInput) }) {
-                Text(if (openRouterSaved) "Saved" else "Save OpenRouter key")
-            }
-
-            // "No API key set" empty state lives in Chat screen's Error path when
-            // ModelRouter throws; this screen is where the user resolves it.
 
             Divider()
 
-            Text("Preferred provider", style = MaterialTheme.typography.titleMedium)
-            Row {
-                listOf("auto", "gemini", "openrouter").forEach { option ->
-                    FilterChip(
-                        selected = preferredProvider == option,
-                        onClick = { viewModel.setPreferredProvider(option) },
-                        label = { Text(option) },
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                }
-            }
+            Text("OpenRouter keys", style = MaterialTheme.typography.titleMedium)
             Text(
-                "\"auto\" follows model-routing.md: Gemini first, OpenRouter free " +
-                    "models on rate limit. Manual gemini/openrouter selection is stored " +
-                    "but not yet read by ModelRouter — wire it in when task-based " +
-                    "routing lands.",
+                "One key per fallback model — Gemini falls back to these in order " +
+                    "if it's rate-limited (model-routing.md).",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
+            ApiKeyField(
+                label = "Llama 3.1 405B key",
+                savedKey = savedLlamaKey,
+                onSave = viewModel::saveOpenRouterLlamaKey
+            )
+            ApiKeyField(
+                label = "Qwen3 Coder key",
+                savedKey = savedQwenCoderKey,
+                onSave = viewModel::saveOpenRouterQwenCoderKey
+            )
+            ApiKeyField(
+                label = "gpt-oss-120b key",
+                savedKey = savedGptOssKey,
+                onSave = viewModel::saveOpenRouterGptOssKey
+            )
+
+            // "No API key set" empty state lives in Chat screen's Error path when
+            // ModelRouter throws; this screen is where the user resolves it.
 
             Divider()
 
@@ -172,5 +143,36 @@ fun SettingsScreen(
                 TextButton(onClick = { showClearConfirm = false }) { Text("Cancel") }
             }
         )
+    }
+}
+
+/**
+ * One API-key input row: text field + Save button, "Saved" derived from whether the
+ * field matches what's actually persisted (not a separate flag that resets on every
+ * recomposition — see prior fix note this replaces).
+ */
+@Composable
+private fun ApiKeyField(
+    label: String,
+    savedKey: String?,
+    onSave: (String) -> Unit
+) {
+    var input by remember { mutableStateOf("") }
+    LaunchedEffect(savedKey) { input = savedKey.orEmpty() }
+    val isSaved = input.isNotBlank() && input == savedKey.orEmpty()
+
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        OutlinedTextField(
+            value = input,
+            onValueChange = { input = it },
+            label = { Text(label) },
+            singleLine = true,
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Button(onClick = { onSave(input) }) {
+            Text(if (isSaved) "Saved" else "Save")
+        }
     }
 }
