@@ -20,5 +20,6 @@ data class MessageEntity(
     val content: String,
     val createdAt: Long,
     val providerUsed: String? = null, // e.g. "gemini", "openrouter:llama-3-8b"
-    val isError: Boolean = false
+    val isError: Boolean = false,
+    val feedback: String? = null // "up" | "down" | null — assistant message toolbar
 )
