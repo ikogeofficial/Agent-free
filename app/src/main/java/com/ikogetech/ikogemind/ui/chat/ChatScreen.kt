@@ -3,12 +3,19 @@ package com.ikogetech.ikogemind.ui.chat
 import android.content.Intent
 import android.speech.tts.TextToSpeech
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ContentCopy
@@ -30,19 +36,18 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -53,6 +58,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -63,6 +69,9 @@ import com.ikogetech.ikogemind.data.local.MessageEntity
 import com.ikogetech.ikogemind.data.repository.ChatRepository
 import com.ikogetech.ikogemind.pipeline.PipelineOrchestrator
 import com.ikogetech.ikogemind.ui.ViewModelFactories
+import com.ikogetech.ikogemind.ui.theme.GlassSurface
+import com.ikogetech.ikogemind.ui.theme.IkogeAccent
+import com.ikogetech.ikogemind.ui.theme.IkogePillShape
 
 // Quick-action starter prompts for the empty ("New Chat") state — audience-specific
 // per brand-notes.md (coding / AI / cybersecurity), not generic Copilot-style chips
@@ -129,6 +138,7 @@ fun ChatScreen(
     val isBusy = uiState is ChatUiState.Waiting
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text("Chat") },
@@ -136,13 +146,20 @@ fun ChatScreen(
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
-                }
+                },
+                // Flat with the pure-black background — a raised/tonal app bar would
+                // read as a hard seam against the glass-card look below it.
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground
+                )
             )
         }
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
                 .padding(padding)
         ) {
             if (messages.isEmpty()) {
@@ -181,25 +198,37 @@ fun ChatScreen(
                         .fillMaxSize()
                         .weight(1f)
                         .padding(horizontal = 12.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
                     items(messages, key = { it.id }) { message ->
-                        MessageBubble(
-                            message = message,
-                            isBusy = isBusy,
-                            onReadAloud = { text ->
-                                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, message.id)
-                            },
-                            onShare = { text ->
-                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_TEXT, text)
-                                }
-                                context.startActivity(Intent.createChooser(shareIntent, null))
-                            },
-                            onFeedback = { feedback -> viewModel.setFeedback(message.id, feedback) },
-                            onRegenerate = { viewModel.regenerate(message.id) }
-                        )
+                        // Fade + rise entrance for each bubble — fires once, the first
+                        // time this key composes (a new message, or the initial load),
+                        // not on every recomposition of the same item.
+                        val visibleState = remember(message.id) {
+                            MutableTransitionState(false).apply { targetState = true }
+                        }
+                        AnimatedVisibility(
+                            visibleState = visibleState,
+                            enter = fadeIn(tween(220)) + slideInVertically(tween(220)) { it / 5 }
+                        ) {
+                            MessageBubble(
+                                message = message,
+                                isBusy = isBusy,
+                                onReadAloud = { text ->
+                                    tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, message.id)
+                                },
+                                onShare = { text ->
+                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(Intent.EXTRA_TEXT, text)
+                                    }
+                                    context.startActivity(Intent.createChooser(shareIntent, null))
+                                },
+                                onFeedback = { feedback -> viewModel.setFeedback(message.id, feedback) },
+                                onRegenerate = { viewModel.regenerate(message.id) }
+                            )
+                        }
                     }
                 }
             }
@@ -242,30 +271,54 @@ fun ChatScreen(
                 ModelStatusChip(currentProviderLabel)
             }
 
+            // Pill-shaped, glass input bar with a glowing circular send button —
+            // replaces the previous plain OutlinedTextField + flat IconButton.
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedTextField(
-                    value = inputText,
-                    onValueChange = { inputText = it },
+                GlassSurface(
                     modifier = Modifier.weight(1f),
-                    placeholder = { Text("Message") }
-                )
-                IconButton(
-                    onClick = {
-                        val text = inputText
-                        inputText = ""
-                        viewModel.sendMessage(text)
-                    }
+                    shape = IkogePillShape
                 ) {
-                    Icon(
-                        Icons.Filled.Send,
-                        contentDescription = "Send",
-                        tint = MaterialTheme.colorScheme.primary
+                    TextField(
+                        value = inputText,
+                        onValueChange = { inputText = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("Message") },
+                        shape = IkogePillShape,
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent
+                        )
                     )
+                }
+                GlassSurface(
+                    shape = CircleShape,
+                    fill = IkogeAccent,
+                    glow = true
+                ) {
+                    IconButton(
+                        onClick = {
+                            val text = inputText
+                            if (text.isNotBlank()) {
+                                inputText = ""
+                                viewModel.sendMessage(text)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            Icons.Filled.Send,
+                            contentDescription = "Send",
+                            tint = Color.White
+                        )
+                    }
                 }
             }
         }
@@ -274,11 +327,7 @@ fun ChatScreen(
 
 @Composable
 private fun ModelStatusChip(label: String) {
-    Surface(
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        shape = RoundedCornerShape(percent = 50)
-    ) {
+    GlassSurface(shape = IkogePillShape) {
         Row(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -350,26 +399,27 @@ private fun MessageBubble(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
         ) {
-            Card(
+            GlassSurface(
                 modifier = Modifier
                     .width(260.dp)
                     .combinedClickable(
                         onClick = {},
                         onLongClick = { copyToClipboard() }
                     ),
-                colors = when {
-                    message.isError -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
-                    isUser -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                    else -> CardDefaults.cardColors()
+                fill = when {
+                    message.isError -> MaterialTheme.colorScheme.errorContainer
+                    isUser -> MaterialTheme.colorScheme.surfaceVariant
+                    else -> MaterialTheme.colorScheme.surface
                 }
             ) {
-                Column(modifier = Modifier.padding(10.dp)) {
+                Column(modifier = Modifier.padding(12.dp)) {
                     Text(message.content, style = MaterialTheme.typography.bodyMedium)
                     if (!isUser && message.providerUsed != null) {
                         Text(
                             friendlyProviderLabel(message.providerUsed),
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 4.dp)
                         )
                     }
                 }
@@ -396,7 +446,8 @@ private fun MessageBubble(
  * comes from material-icons-core (already a dependency, confirmed against the
  * material-icons-core bug that broke the build earlier) — ThumbDown isn't in core,
  * so it's rendered as a 180°-rotated ThumbUp instead of pulling in the much larger
- * material-icons-extended for one icon.
+ * material-icons-extended for one icon. Selected thumb tint animates in/out rather
+ * than snapping, matching the softer motion language of the rest of the overhaul.
  */
 @Composable
 private fun MessageActionsRow(
@@ -410,6 +461,14 @@ private fun MessageActionsRow(
 ) {
     val iconSize = 16.dp
     val buttonSize = 32.dp
+    val upTint by animateColorAsState(
+        if (feedback == "up") MaterialTheme.colorScheme.primary else LocalContentColor.current,
+        label = "thumbUpTint"
+    )
+    val downTint by animateColorAsState(
+        if (feedback == "down") MaterialTheme.colorScheme.error else LocalContentColor.current,
+        label = "thumbDownTint"
+    )
 
     Row(
         modifier = Modifier.padding(top = 2.dp),
@@ -433,7 +492,7 @@ private fun MessageActionsRow(
                 Icons.Filled.ThumbUp,
                 contentDescription = "Good response",
                 modifier = Modifier.size(iconSize),
-                tint = if (feedback == "up") MaterialTheme.colorScheme.primary else LocalContentColor.current
+                tint = upTint
             )
         }
         IconButton(
@@ -446,7 +505,7 @@ private fun MessageActionsRow(
                 modifier = Modifier
                     .size(iconSize)
                     .graphicsLayer { rotationZ = 180f },
-                tint = if (feedback == "down") MaterialTheme.colorScheme.error else LocalContentColor.current
+                tint = downTint
             )
         }
         IconButton(onClick = onRegenerate, enabled = regenerateEnabled, modifier = Modifier.size(buttonSize)) {
