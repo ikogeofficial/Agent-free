@@ -43,6 +43,14 @@ interface MessageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(message: MessageEntity)
 
+    /** Used by regenerate: drop the old assistant reply before inserting a fresh one. */
+    @Query("DELETE FROM messages WHERE id = :id")
+    suspend fun deleteById(id: String)
+
+    /** Used by the thumbs up/down toolbar action. Pass null to clear feedback. */
+    @Query("UPDATE messages SET feedback = :feedback WHERE id = :id")
+    suspend fun setFeedback(id: String, feedback: String?)
+
     @Query("DELETE FROM messages WHERE conversationId = :conversationId")
     suspend fun deleteForConversation(conversationId: String)
 
