@@ -90,7 +90,11 @@ fun ChatScreen(
     chatRepository: ChatRepository,
     pipelineOrchestrator: PipelineOrchestrator,
     onBack: () -> Unit,
-    onConversationIdAssigned: (String) -> Unit
+    onConversationIdAssigned: (String) -> Unit,
+    // Prefilled from Home screen's "Ask anything" bar (see NavGraph's ARG_DRAFT
+    // handoff) — seeds the input field only, doesn't auto-send, same "review
+    // before it's sent" behavior as the QUICK_ACTIONS chips below.
+    initialDraft: String? = null
 ) {
     val viewModel: ChatViewModel = viewModel(
         factory = ViewModelFactories.chat(chatRepository, pipelineOrchestrator, conversationId)
@@ -106,7 +110,7 @@ fun ChatScreen(
         activeConversationId?.let { onConversationIdAssigned(it) }
     }
 
-    var inputText by remember { mutableStateOf("") }
+    var inputText by remember { mutableStateOf(initialDraft ?: "") }
     val listState = rememberLazyListState()
     val context = LocalContext.current
 
