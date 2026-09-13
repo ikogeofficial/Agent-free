@@ -31,7 +31,16 @@ interface GeminiApi {
 }
 
 data class GeminiRequest(
-    val contents: List<GeminiContent>
+    val contents: List<GeminiContent>,
+    // Gemini's REST API takes the system prompt as a top-level field, separate
+    // from `contents` (unlike OpenAI-style APIs, which just use a "system" role
+    // message in the same array). ModelRouter.callGemini splits it out before
+    // building this request.
+    val systemInstruction: GeminiSystemInstruction? = null
+)
+
+data class GeminiSystemInstruction(
+    val parts: List<GeminiPart>
 )
 
 data class GeminiContent(
