@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [ConversationEntity::class, MessageEntity::class],
-    version = 1,
+    version = 2, // bumped for MessageEntity.feedback (thumbs up/down toolbar action)
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -20,6 +20,12 @@ abstract class AppDatabase : RoomDatabase() {
                 context.applicationContext,
                 AppDatabase::class.java,
                 "ikogemind.db"
-            ).build()
+            )
+                // Personal-testing scope (decisions-log.md) — no installed base to
+                // preserve, so a destructive migration is fine instead of writing a
+                // real Migration for this one added column. Revisit once this ships
+                // beyond personal testing.
+                .fallbackToDestructiveMigration()
+                .build()
     }
 }
