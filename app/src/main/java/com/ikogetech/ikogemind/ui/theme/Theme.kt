@@ -8,15 +8,20 @@ import androidx.compose.runtime.Composable
 
 private val DarkColors = darkColorScheme(
     background = IkogeBackground,
-    surface = IkogeSurface,
-    surfaceVariant = IkogeSurfaceVariant,
+    surface = IkogeGlassSurface,
+    surfaceVariant = IkogeGlassSurfaceVariant,
     primary = IkogeAccent,
     onBackground = IkogeOnBackground,
     onSurface = IkogeOnBackground,
     onSurfaceVariant = IkogeOnSurfaceMuted,
-    error = IkogeError
+    error = IkogeError,
+    errorContainer = IkogeErrorContainer,
+    onErrorContainer = IkogeOnBackground
 )
 
+// The glass-card look is designed for dark mode — light mode keeps Material3's
+// defaults rather than trying to invert "black glass" into something that would
+// no longer read as the same design language.
 private val LightColors = lightColorScheme(
     primary = IkogeAccent,
     error = IkogeError
@@ -30,6 +35,7 @@ fun IkogeMindTheme(
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColors else LightColors,
         typography = IkogeTypography,
+        shapes = IkogeShapes,
         content = content
     )
 }
