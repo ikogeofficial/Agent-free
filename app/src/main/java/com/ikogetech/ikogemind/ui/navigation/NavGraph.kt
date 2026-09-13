@@ -11,6 +11,7 @@ import com.ikogetech.ikogemind.data.repository.SettingsRepository
 import com.ikogetech.ikogemind.pipeline.PipelineOrchestrator
 import com.ikogetech.ikogemind.ui.chat.ChatScreen
 import com.ikogetech.ikogemind.ui.conversationlist.ConversationListScreen
+import com.ikogetech.ikogemind.ui.home.HomeScreen
 import com.ikogetech.ikogemind.ui.settings.SettingsScreen
 
 @Composable
@@ -20,7 +21,28 @@ fun IkogeMindNavGraph(
     pipelineOrchestrator: PipelineOrchestrator,
     navController: NavHostController = rememberNavController()
 ) {
-    NavHost(navController = navController, startDestination = Routes.ConversationList.route) {
+    // Home is now the app's landing screen (settled decision, see decisions-log.md);
+    // ConversationList moves to being reached via Home's history icon rather than
+    // being the first thing shown on launch.
+    NavHost(navController = navController, startDestination = Routes.Home.route) {
+
+        composable(Routes.Home.route) {
+            HomeScreen(
+                onOpenHistory = { navController.navigate(Routes.ConversationList.route) },
+                onOpenSettings = { navController.navigate(Routes.Settings.route) },
+                onStartChat = { draft ->
+                    navController.navigate(Routes.Chat.path(Routes.Chat.NEW_CHAT_ID))
+                    // Set after navigate() (rather than passed as a nav arg) so the
+                    // draft is out-of-band from the route pattern itself — same
+                    // SavedStateHandle handoff NavGraph already relies on for
+                    // onConversationIdAssigned below, just set on the entry we're
+                    // navigating to instead of read from the one we're leaving.
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(Routes.Chat.ARG_DRAFT, draft)
+                }
+            )
+        }
 
         composable(Routes.ConversationList.route) {
             ConversationListScreen(
@@ -39,8 +61,12 @@ fun IkogeMindNavGraph(
                 ?.getString(Routes.Chat.ARG_CONVERSATION_ID)
                 ?: Routes.Chat.NEW_CHAT_ID
 
+            val initialDraft = backStackEntry.savedStateHandle
+                .get<String>(Routes.Chat.ARG_DRAFT)
+
             ChatScreen(
                 conversationId = conversationId,
+                initialDraft = initialDraft,
                 chatRepository = chatRepository,
                 pipelineOrchestrator = pipelineOrchestrator,
                 onBack = { navController.popBackStack() },
