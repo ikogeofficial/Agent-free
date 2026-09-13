@@ -62,6 +62,16 @@ class ChatRepository(
         }
     }
 
+    /** Used by regenerate to drop the stale assistant reply before re-running the pipeline. */
+    suspend fun deleteMessage(messageId: String) {
+        messageDao.deleteById(messageId)
+    }
+
+    /** Used by the thumbs up/down toolbar action. Pass null to clear feedback (toggle off). */
+    suspend fun setFeedback(messageId: String, feedback: String?) {
+        messageDao.setFeedback(messageId, feedback)
+    }
+
     suspend fun deleteConversation(conversationId: String) {
         messageDao.deleteForConversation(conversationId)
         conversationDao.delete(conversationId)
