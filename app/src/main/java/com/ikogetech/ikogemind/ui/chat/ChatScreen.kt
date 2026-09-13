@@ -1,5 +1,7 @@
 package com.ikogetech.ikogemind.ui.chat
 
+import android.content.Intent
+import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -21,7 +23,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,6 +36,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -36,6 +44,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,6 +53,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
@@ -89,9 +99,23 @@ fun ChatScreen(
 
     var inputText by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
+    val context = LocalContext.current
 
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) listState.animateScrollToItem(messages.size - 1)
+    }
+
+    // Single shared TextToSpeech engine for the whole screen — one per message
+    // bubble would spin up a new engine per row, which is wasteful and can talk
+    // over itself. Read-aloud on any bubble routes through this same instance.
+    val tts = remember {
+        TextToSpeech(context.applicationContext, null)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            tts.stop()
+            tts.shutdown()
+        }
     }
 
     // Drives the model-status chip: the provider that actually served the most
@@ -101,6 +125,8 @@ fun ChatScreen(
     val currentProviderLabel = remember(messages) {
         friendlyProviderLabel(messages.lastOrNull { it.role == "assistant" && it.providerUsed != null }?.providerUsed)
     }
+
+    val isBusy = uiState is ChatUiState.Waiting
 
     Scaffold(
         topBar = {
@@ -158,7 +184,22 @@ fun ChatScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(messages, key = { it.id }) { message ->
-                        MessageBubble(message)
+                        MessageBubble(
+                            message = message,
+                            isBusy = isBusy,
+                            onReadAloud = { text ->
+                                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, message.id)
+                            },
+                            onShare = { text ->
+                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, text)
+                                }
+                                context.startActivity(Intent.createChooser(shareIntent, null))
+                            },
+                            onFeedback = { feedback -> viewModel.setFeedback(message.id, feedback) },
+                            onRegenerate = { viewModel.regenerate(message.id) }
+                        )
                     }
                 }
             }
@@ -275,45 +316,141 @@ private fun friendlyProviderLabel(raw: String?): String {
 // Long-press any message bubble to copy its raw text — added so users (and the
 // model itself, when asked) don't need to hand-roll copy logic per platform; the
 // model was suggesting navigator.clipboard/React snippets that don't apply to a
-// native Android app. Uses Compose's LocalClipboardManager rather than the raw
-// ClipboardManager system service — no Context boilerplate needed for plain text.
+// native Android app (now also fixed at the source via ModelStep's system prompt).
+// Uses Compose's LocalClipboardManager rather than the raw ClipboardManager system
+// service — no Context boilerplate needed for plain text.
+//
+// Assistant replies additionally get a full action toolbar (copy, share,
+// read-aloud, thumbs up/down, regenerate) below the bubble — user's own messages
+// keep just the long-press copy since regenerate/feedback don't apply to them.
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun MessageBubble(message: MessageEntity) {
+private fun MessageBubble(
+    message: MessageEntity,
+    isBusy: Boolean,
+    onReadAloud: (String) -> Unit,
+    onShare: (String) -> Unit,
+    onFeedback: (String?) -> Unit,
+    onRegenerate: () -> Unit
+) {
     val isUser = message.role == "user"
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
 
-    Row(
+    fun copyToClipboard() {
+        clipboardManager.setText(AnnotatedString(message.content))
+        Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+    }
+
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
+        horizontalAlignment = if (isUser) Alignment.End else Alignment.Start
     ) {
-        Card(
-            modifier = Modifier
-                .width(260.dp)
-                .combinedClickable(
-                    onClick = {},
-                    onLongClick = {
-                        clipboardManager.setText(AnnotatedString(message.content))
-                        Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
-                    }
-                ),
-            colors = when {
-                message.isError -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
-                isUser -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                else -> CardDefaults.cardColors()
-            }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
         ) {
-            Column(modifier = Modifier.padding(10.dp)) {
-                Text(message.content, style = MaterialTheme.typography.bodyMedium)
-                if (!isUser && message.providerUsed != null) {
-                    Text(
-                        friendlyProviderLabel(message.providerUsed),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+            Card(
+                modifier = Modifier
+                    .width(260.dp)
+                    .combinedClickable(
+                        onClick = {},
+                        onLongClick = { copyToClipboard() }
+                    ),
+                colors = when {
+                    message.isError -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+                    isUser -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                    else -> CardDefaults.cardColors()
+                }
+            ) {
+                Column(modifier = Modifier.padding(10.dp)) {
+                    Text(message.content, style = MaterialTheme.typography.bodyMedium)
+                    if (!isUser && message.providerUsed != null) {
+                        Text(
+                            friendlyProviderLabel(message.providerUsed),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
+        }
+
+        if (!isUser && !message.isError) {
+            MessageActionsRow(
+                feedback = message.feedback,
+                regenerateEnabled = !isBusy,
+                onCopy = { copyToClipboard() },
+                onShare = { onShare(message.content) },
+                onReadAloud = { onReadAloud(message.content) },
+                onFeedback = onFeedback,
+                onRegenerate = onRegenerate
+            )
+        }
+    }
+}
+
+/**
+ * The assistant-message action row from the reference design: copy, share,
+ * read-aloud, thumbs up, thumbs down, regenerate. Every icon except thumbs-down
+ * comes from material-icons-core (already a dependency, confirmed against the
+ * material-icons-core bug that broke the build earlier) — ThumbDown isn't in core,
+ * so it's rendered as a 180°-rotated ThumbUp instead of pulling in the much larger
+ * material-icons-extended for one icon.
+ */
+@Composable
+private fun MessageActionsRow(
+    feedback: String?,
+    regenerateEnabled: Boolean,
+    onCopy: () -> Unit,
+    onShare: () -> Unit,
+    onReadAloud: () -> Unit,
+    onFeedback: (String?) -> Unit,
+    onRegenerate: () -> Unit
+) {
+    val iconSize = 16.dp
+    val buttonSize = 32.dp
+
+    Row(
+        modifier = Modifier.padding(top = 2.dp),
+        horizontalArrangement = Arrangement.spacedBy(0.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onCopy, modifier = Modifier.size(buttonSize)) {
+            Icon(Icons.Filled.ContentCopy, contentDescription = "Copy", modifier = Modifier.size(iconSize))
+        }
+        IconButton(onClick = onShare, modifier = Modifier.size(buttonSize)) {
+            Icon(Icons.Filled.Share, contentDescription = "Share", modifier = Modifier.size(iconSize))
+        }
+        IconButton(onClick = onReadAloud, modifier = Modifier.size(buttonSize)) {
+            Icon(Icons.Filled.PlayArrow, contentDescription = "Read aloud", modifier = Modifier.size(iconSize))
+        }
+        IconButton(
+            onClick = { onFeedback(if (feedback == "up") null else "up") },
+            modifier = Modifier.size(buttonSize)
+        ) {
+            Icon(
+                Icons.Filled.ThumbUp,
+                contentDescription = "Good response",
+                modifier = Modifier.size(iconSize),
+                tint = if (feedback == "up") MaterialTheme.colorScheme.primary else LocalContentColor.current
+            )
+        }
+        IconButton(
+            onClick = { onFeedback(if (feedback == "down") null else "down") },
+            modifier = Modifier.size(buttonSize)
+        ) {
+            Icon(
+                Icons.Filled.ThumbUp,
+                contentDescription = "Bad response",
+                modifier = Modifier
+                    .size(iconSize)
+                    .graphicsLayer { rotationZ = 180f },
+                tint = if (feedback == "down") MaterialTheme.colorScheme.error else LocalContentColor.current
+            )
+        }
+        IconButton(onClick = onRegenerate, enabled = regenerateEnabled, modifier = Modifier.size(buttonSize)) {
+            Icon(Icons.Filled.Refresh, contentDescription = "Regenerate", modifier = Modifier.size(iconSize))
         }
     }
 }
