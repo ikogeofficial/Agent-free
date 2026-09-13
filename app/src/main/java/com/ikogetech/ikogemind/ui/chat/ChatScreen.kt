@@ -1,1 +1,319 @@
-cGFja2FnZSBjb20uaWtvZ2V0ZWNoLmlrb2dlbWluZC51aS5jaGF0CgppbXBvcnQgYW5kcm9pZC53aWRnZXQuVG9hc3QKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5FeHBlcmltZW50YWxGb3VuZGF0aW9uQXBpCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24uYmFja2dyb3VuZAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLmNvbWJpbmVkQ2xpY2thYmxlCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF5b3V0LkFycmFuZ2VtZW50CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF5b3V0LkJveAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLmxheW91dC5Db2x1bW4KaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXlvdXQuUm93CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF5b3V0LmZpbGxNYXhTaXplCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF5b3V0LmZpbGxNYXhXaWR0aAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLmxheW91dC5wYWRkaW5nCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF5b3V0LnNpemUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXlvdXQud2lkdGgKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXp5LkxhenlDb2x1bW4KaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXp5LkxhenlSb3cKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXp5Lml0ZW1zCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF6eS5yZW1lbWJlckxhenlMaXN0U3RhdGUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5zaGFwZS5DaXJjbGVTaGFwZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLnNoYXBlLlJvdW5kZWRDb3JuZXJTaGFwZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbC5pY29ucy5JY29ucwppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbC5pY29ucy5hdXRvbWlycm9yZWQuZmlsbGVkLkFycm93QmFjawppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbC5pY29ucy5maWxsZWQuU2VuZAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuQXNzaXN0Q2hpcAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuQ2FyZAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuQ2FyZERlZmF1bHRzCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5DaXJjdWxhclByb2dyZXNzSW5kaWNhdG9yCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5FeHBlcmltZW50YWxNYXRlcmlhbDNBcGkKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UubWF0ZXJpYWwzLkljb24KaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UubWF0ZXJpYWwzLkljb25CdXR0b24KaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UubWF0ZXJpYWwzLk1hdGVyaWFsVGhlbWUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UubWF0ZXJpYWwzLk91dGxpbmVkVGV4dEZpZWxkCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5TY2FmZm9sZAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuU3VyZmFjZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuVGV4dAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuVG9wQXBwQmFyCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnJ1bnRpbWUuQ29tcG9zYWJsZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5ydW50aW1lLkxhdW5jaGVkRWZmZWN0CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnJ1bnRpbWUuY29sbGVjdEFzU3RhdGUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UucnVudGltZS5nZXRWYWx1ZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5ydW50aW1lLm11dGFibGVTdGF0ZU9mCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnJ1bnRpbWUucmVtZW1iZXIKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UucnVudGltZS5zZXRWYWx1ZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS51aS5BbGlnbm1lbnQKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UudWkuTW9kaWZpZXIKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UudWkucGxhdGZvcm0uTG9jYWxDbGlwYm9hcmRNYW5hZ2VyCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnVpLnBsYXRmb3JtLkxvY2FsQ29udGV4dAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS51aS50ZXh0LkFubm90YXRlZFN0cmluZwppbXBvcnQgYW5kcm9pZHguY29tcG9zZS51aS51bml0LmRwCmltcG9ydCBhbmRyb2lkeC5saWZlY3ljbGUudmlld21vZGVsLmNvbXBvc2Uudmlld01vZGVsCmltcG9ydCBjb20uaWtvZ2V0ZWNoLmlrb2dlbWluZC5kYXRhLmxvY2FsLk1lc3NhZ2VFbnRpdHkKaW1wb3J0IGNvbS5pa29nZXRlY2guaWtvZ2VtaW5kLmRhdGEucmVwb3NpdG9yeS5DaGF0UmVwb3NpdG9yeQppbXBvcnQgY29tLmlrb2dldGVjaC5pa29nZW1pbmQucGlwZWxpbmUuUGlwZWxpbmVPcmNoZXN0cmF0b3IKaW1wb3J0IGNvbS5pa29nZXRlY2guaWtvZ2VtaW5kLnVpLlZpZXdNb2RlbEZhY3RvcmllcwoKLy8gUXVpY2stYWN0aW9uIHN0YXJ0ZXIgcHJvbXB0cyBmb3IgdGhlIGVtcHR5ICgiTmV3IENoYXQiKSBzdGF0ZSDigJQgYXVkaWVuY2Utc3BlY2lmaWMKLy8gcGVyIGJyYW5kLW5vdGVzLm1kIChjb2RpbmcgLyBBSSAvIGN5YmVyc2VjdXJpdHkpLCBub3QgZ2VuZXJpYyBDb3BpbG90LXN0eWxlIGNoaXBzCi8vIGxpa2UgIldyaXRlIGEgZmlyc3QgZHJhZnQiLiBUYXBwaW5nIGZpbGxzIHRoZSBpbnB1dCByYXRoZXIgdGhhbiBhdXRvLXNlbmRpbmcsIHNvCi8vIHRoZSBwZXJzb24gY2FuIGVkaXQgYmVmb3JlIGNvbW1pdHRpbmcuCnByaXZhdGUgdmFsIFFVSUNLX0FDVElPTlMgPSBsaXN0T2YoCiAgICAiRXhwbGFpbiBhIGNvbmNlcHQiIHRvICJDYW4geW91IGV4cGxhaW4gIiwKICAgICJEZWJ1ZyBhbiBlcnJvciIgdG8gIkhlcmUncyBhbiBlcnJvciBJJ20gZ2V0dGluZzogIiwKICAgICJSZXZpZXcgbXkgY29kZSIgdG8gIkNhbiB5b3UgcmV2aWV3IHRoaXMgY29kZTogIgopCgpAT3B0SW4oRXhwZXJpbWVudGFsTWF0ZXJpYWwzQXBpOjpjbGFzcykKQENvbXBvc2FibGUKZnVuIENoYXRTY3JlZW4oCiAgICBjb252ZXJzYXRpb25JZDogU3RyaW5nLAogICAgY2hhdFJlcG9zaXRvcnk6IENoYXRSZXBvc2l0b3J5LAogICAgcGlwZWxpbmVPcmNoZXN0cmF0b3I6IFBpcGVsaW5lT3JjaGVzdHJhdG9yLAogICAgb25CYWNrOiAoKSAtPiBVbml0LAogICAgb25Db252ZXJzYXRpb25JZEFzc2lnbmVkOiAoU3RyaW5nKSAtPiBVbml0CikgewogICAgdmFsIHZpZXdNb2RlbDogQ2hhdFZpZXdNb2RlbCA9IHZpZXdNb2RlbCgKICAgICAgICBmYWN0b3J5ID0gVmlld01vZGVsRmFjdG9yaWVzLmNoYXQoY2hhdFJlcG9zaXRvcnksIHBpcGVsaW5lT3JjaGVzdHJhdG9yLCBjb252ZXJzYXRpb25JZCkKICAgICkKCiAgICB2YWwgbWVzc2FnZXMgYnkgdmlld01vZGVsLm1lc3NhZ2VzLmNvbGxlY3RBc1N0YXRlKCkKICAgIHZhbCB1aVN0YXRlIGJ5IHZpZXdNb2RlbC51aVN0YXRlLmNvbGxlY3RBc1N0YXRlKCkKICAgIHZhbCBhY3RpdmVDb252ZXJzYXRpb25JZCBieSB2aWV3TW9kZWwuYWN0aXZlQ29udmVyc2F0aW9uSWQuY29sbGVjdEFzU3RhdGUoKQoKICAgIC8vIE9uY2UgYSAibmV3IGNoYXQiIGdldHMgYSByZWFsIGlkIG9uIGZpcnN0IHNlbmQsIHRlbGwgdGhlIG5hdiBob3N0IHNvIGJhY2stc3RhY2sKICAgIC8vIC8gY29udmVyc2F0aW9uIGxpc3Qgc3RheSBpbiBzeW5jIChzY3JlZW5zLWFuZC1mbG93cy5tZCBOZXcgQ2hhdCAtPiBDaGF0IFNjcmVlbikuCiAgICBMYXVuY2hlZEVmZmVjdChhY3RpdmVDb252ZXJzYXRpb25JZCkgewogICAgICAgIGFjdGl2ZUNvbnZlcnNhdGlvbklkPy5sZXQgeyBvbkNvbnZlcnNhdGlvbklkQXNzaWduZWQoaXQpIH0KICAgIH0KCiAgICB2YXIgaW5wdXRUZXh0IGJ5IHJlbWVtYmVyIHsgbXV0YWJsZVN0YXRlT2YoIiIpIH0KICAgIHZhbCBsaXN0U3RhdGUgPSByZW1lbWJlckxhenlMaXN0U3RhdGUoKQoKICAgIExhdW5jaGVkRWZmZWN0KG1lc3NhZ2VzLnNpemUpIHsKICAgICAgICBpZiAobWVzc2FnZXMuaXNOb3RFbXB0eSgpKSBsaXN0U3RhdGUuYW5pbWF0ZVNjcm9sbFRvSXRlbShtZXNzYWdlcy5zaXplIC0gMSkKICAgIH0KCiAgICAvLyBEcml2ZXMgdGhlIG1vZGVsLXN0YXR1cyBjaGlwOiB0aGUgcHJvdmlkZXIgdGhhdCBhY3R1YWxseSBzZXJ2ZWQgdGhlIG1vc3QKICAgIC8vIHJlY2VudCBhc3Npc3RhbnQgcmVwbHksIG9yIHRoZSB2MSBkZWZhdWx0IChHZW1pbmksIHBlciBtb2RlbC1yb3V0aW5nLm1kKQogICAgLy8gYmVmb3JlIGFueSByZXBseSBoYXMgY29tZSBiYWNrIHlldC4gTm90IGEgcGlja2VyIOKAlCB2MSBpcyBnbG9iYWwtZGVmYXVsdC1vbmx5CiAgICAvLyAoc2VlIGRlY2lzaW9ucyBsb2cpLCBzbyB0aGlzIGlzIHN0YXR1cywgbm90IGEgY29udHJvbC4KICAgIHZhbCBjdXJyZW50UHJvdmlkZXJMYWJlbCA9IHJlbWVtYmVyKG1lc3NhZ2VzKSB7CiAgICAgICAgZnJpZW5kbHlQcm92aWRlckxhYmVsKG1lc3NhZ2VzLmxhc3RPck51bGwgeyBpdC5yb2xlID09ICJhc3Npc3RhbnQiICYmIGl0LnByb3ZpZGVyVXNlZCAhPSBudWxsIH0/LnByb3ZpZGVyVXNlZCkKICAgIH0KCiAgICBTY2FmZm9sZCgKICAgICAgICB0b3BCYXIgPSB7CiAgICAgICAgICAgIFRvcEFwcEJhcigKICAgICAgICAgICAgICAgIHRpdGxlID0geyBUZXh0KCJDaGF0IikgfSwKICAgICAgICAgICAgICAgIG5hdmlnYXRpb25JY29uID0gewogICAgICAgICAgICAgICAgICAgIEljb25CdXR0b24ob25DbGljayA9IG9uQmFjaykgewogICAgICAgICAgICAgICAgICAgICAgICBJY29uKEljb25zLkF1dG9NaXJyb3JlZC5GaWxsZWQuQXJyb3dCYWNrLCBjb250ZW50RGVzY3JpcHRpb24gPSAiQmFjayIpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICApCiAgICAgICAgfQogICAgKSB7IHBhZGRpbmcgLT4KICAgICAgICBDb2x1bW4oCiAgICAgICAgICAgIG1vZGlmaWVyID0gTW9kaWZpZXIKICAgICAgICAgICAgICAgIC5maWxsTWF4U2l6ZSgpCiAgICAgICAgICAgICAgICAucGFkZGluZyhwYWRkaW5nKQogICAgICAgICkgewogICAgICAgICAgICBpZiAobWVzc2FnZXMuaXNFbXB0eSgpKSB7CiAgICAgICAgICAgICAgICAvLyBDaGF0IHNjcmVlbiAiRW1wdHkiIHN0YXRlIOKAlCBkb3VibGVzIGFzIHRoZSAiTmV3IENoYXQiIHNjcmVlbiBmcm9tCiAgICAgICAgICAgICAgICAvLyBzY3JlZW5zLWFuZC1mbG93cy5tZDsgdGhlcmUncyBubyBzZXBhcmF0ZSBOZXdDaGF0U2NyZWVuIGZpbGUuCiAgICAgICAgICAgICAgICBDb2x1bW4oCiAgICAgICAgICAgICAgICAgICAgbW9kaWZpZXIgPSBNb2RpZmllcgogICAgICAgICAgICAgICAgICAgICAgICAuZmlsbE1heFNpemUoKQogICAgICAgICAgICAgICAgICAgICAgICAud2VpZ2h0KDFmKQogICAgICAgICAgICAgICAgICAgICAgICAucGFkZGluZygyNC5kcCksCiAgICAgICAgICAgICAgICAgICAgdmVydGljYWxBcnJhbmdlbWVudCA9IEFycmFuZ2VtZW50LkNlbnRlcgogICAgICAgICAgICAgICAgKSB7CiAgICAgICAgICAgICAgICAgICAgVGV4dCgKICAgICAgICAgICAgICAgICAgICAgICAgIldoYXQgY2FuIEkgaGVscCB5b3Ugd2l0aD8iLAogICAgICAgICAgICAgICAgICAgICAgICBzdHlsZSA9IE1hdGVyaWFsVGhlbWUudHlwb2dyYXBoeS50aXRsZUxhcmdlCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIFRleHQoCiAgICAgICAgICAgICAgICAgICAgICAgICJBc2sgYWJvdXQgY29kZSwgc2VjdXJpdHksIG9yIGFueXRoaW5nIGVsc2UuIiwKICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGUgPSBNYXRlcmlhbFRoZW1lLnR5cG9ncmFwaHkuYm9keU1lZGl1bSwKICAgICAgICAgICAgICAgICAgICAgICAgY29sb3IgPSBNYXRlcmlhbFRoZW1lLmNvbG9yU2NoZW1lLm9uU3VyZmFjZVZhcmlhbnQsCiAgICAgICAgICAgICAgICAgICAgICAgIG1vZGlmaWVyID0gTW9kaWZpZXIucGFkZGluZyh0b3AgPSA0LmRwLCBib3R0b20gPSAxNi5kcCkKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgTGF6eVJvdyhob3Jpem9udGFsQXJyYW5nZW1lbnQgPSBBcnJhbmdlbWVudC5zcGFjZWRCeSg4LmRwKSkgewogICAgICAgICAgICAgICAgICAgICAgICBpdGVtcyhRVUlDS19BQ1RJT05TKSB7IChsYWJlbCwgc3RhcnRlcikgLT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFzc2lzdENoaXAoCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgb25DbGljayA9IHsgaW5wdXRUZXh0ID0gc3RhcnRlciB9LAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxhYmVsID0geyBUZXh0KGxhYmVsKSB9CiAgICAgICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICBMYXp5Q29sdW1uKAogICAgICAgICAgICAgICAgICAgIHN0YXRlID0gbGlzdFN0YXRlLAogICAgICAgICAgICAgICAgICAgIG1vZGlmaWVyID0gTW9kaWZpZXIKICAgICAgICAgICAgICAgICAgICAgICAgLmZpbGxNYXhTaXplKCkKICAgICAgICAgICAgICAgICAgICAgICAgLndlaWdodCgxZikKICAgICAgICAgICAgICAgICAgICAgICAgLnBhZGRpbmcoaG9yaXpvbnRhbCA9IDEyLmRwKSwKICAgICAgICAgICAgICAgICAgICB2ZXJ0aWNhbEFycmFuZ2VtZW50ID0gQXJyYW5nZW1lbnQuc3BhY2VkQnkoOC5kcCkKICAgICAgICAgICAgICAgICkgewogICAgICAgICAgICAgICAgICAgIGl0ZW1zKG1lc3NhZ2VzLCBrZXkgPSB7IGl0LmlkIH0pIHsgbWVzc2FnZSAtPgogICAgICAgICAgICAgICAgICAgICAgICBNZXNzYWdlQnViYmxlKG1lc3NhZ2UpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CgogICAgICAgICAgICAvLyAiU3RyZWFtaW5nIiBzdGF0ZSAoTW9kZWxTdGVwIGlzIG5vbi1zdHJlYW1pbmcgaW4gdjEsIHNlZSBDaGF0VWlTdGF0ZSBub3RlKQogICAgICAgICAgICBpZiAodWlTdGF0ZSBpcyBDaGF0VWlTdGF0ZS5XYWl0aW5nKSB7CiAgICAgICAgICAgICAgICBSb3coCiAgICAgICAgICAgICAgICAgICAgbW9kaWZpZXIgPSBNb2RpZmllcgogICAgICAgICAgICAgICAgICAgICAgICAuZmlsbE1heFdpZHRoKCkKICAgICAgICAgICAgICAgICAgICAgICAgLnBhZGRpbmcoOC5kcCksCiAgICAgICAgICAgICAgICAgICAgaG9yaXpvbnRhbEFycmFuZ2VtZW50ID0gQXJyYW5nZW1lbnQuQ2VudGVyCiAgICAgICAgICAgICAgICApIHsKICAgICAgICAgICAgICAgICAgICBDaXJjdWxhclByb2dyZXNzSW5kaWNhdG9yKAogICAgICAgICAgICAgICAgICAgICAgICBtb2RpZmllciA9IE1vZGlmaWVyLnNpemUoMjAuZHApLAogICAgICAgICAgICAgICAgICAgICAgICBjb2xvciA9IE1hdGVyaWFsVGhlbWUuY29sb3JTY2hlbWUucHJpbWFyeQogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQoKICAgICAgICAgICAgLy8gIkVycm9yIiAvICJSYXRlLWxpbWl0ZWQiIHN0YXRlcyDigJQgbm90ZSB3aGljaCBwcm92aWRlciBmYWlsZWQsIHBlcgogICAgICAgICAgICAvLyBzY3JlZW5zLWFuZC1mbG93cy5tZCAoInNob3cgcmV0cnksIG5vdGUgd2hpY2ggcHJvdmlkZXIgZmFpbGVkIikKICAgICAgICAgICAgdmFsIHN0YXRlID0gdWlTdGF0ZQogICAgICAgICAgICBpZiAoc3RhdGUgaXMgQ2hhdFVpU3RhdGUuRXJyb3IpIHsKICAgICAgICAgICAgICAgIFRleHQoCiAgICAgICAgICAgICAgICAgICAgdGV4dCA9IGlmIChzdGF0ZS5pc1JhdGVMaW1pdCkKICAgICAgICAgICAgICAgICAgICAgICAgIlJhdGUgbGltaXQgaGl0IG9uIHRoZSBjdXJyZW50IHByb3ZpZGVyLiAke3N0YXRlLm1lc3NhZ2V9IgogICAgICAgICAgICAgICAgICAgIGVsc2UKICAgICAgICAgICAgICAgICAgICAgICAgIlNvbWV0aGluZyB3ZW50IHdyb25nOiAke3N0YXRlLm1lc3NhZ2V9IiwKICAgICAgICAgICAgICAgICAgICBjb2xvciA9IE1hdGVyaWFsVGhlbWUuY29sb3JTY2hlbWUuZXJyb3IsCiAgICAgICAgICAgICAgICAgICAgbW9kaWZpZXIgPSBNb2RpZmllci5wYWRkaW5nKGhvcml6b250YWwgPSAxNi5kcCwgdmVydGljYWwgPSA0LmRwKSwKICAgICAgICAgICAgICAgICAgICBzdHlsZSA9IE1hdGVyaWFsVGhlbWUudHlwb2dyYXBoeS5ib2R5U21hbGwKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgfQoKICAgICAgICAgICAgLy8gTW9kZWwgc3RhdHVzIGNoaXAg4oCUIG9uZSBxdWlldCBpbmRpY2F0b3IsIG5vdCBhIGRyb3Bkb3duL3NlbGVjdG9yLgogICAgICAgICAgICBSb3coCiAgICAgICAgICAgICAgICBtb2RpZmllciA9IE1vZGlmaWVyLnBhZGRpbmcoc3RhcnQgPSAxNi5kcCwgdG9wID0gNC5kcCksCiAgICAgICAgICAgICAgICBob3Jpem9udGFsQXJyYW5nZW1lbnQgPSBBcnJhbmdlbWVudC5TdGFydAogICAgICAgICAgICApIHsKICAgICAgICAgICAgICAgIE1vZGVsU3RhdHVzQ2hpcChjdXJyZW50UHJvdmlkZXJMYWJlbCkKICAgICAgICAgICAgfQoKICAgICAgICAgICAgUm93KAogICAgICAgICAgICAgICAgbW9kaWZpZXIgPSBNb2RpZmllcgogICAgICAgICAgICAgICAgICAgIC5maWxsTWF4V2lkdGgoKQogICAgICAgICAgICAgICAgICAgIC5wYWRkaW5nKDguZHApLAogICAgICAgICAgICAgICAgdmVydGljYWxBbGlnbm1lbnQgPSBBbGlnbm1lbnQuQ2VudGVyVmVydGljYWxseQogICAgICAgICAgICApIHsKICAgICAgICAgICAgICAgIE91dGxpbmVkVGV4dEZpZWxkKAogICAgICAgICAgICAgICAgICAgIHZhbHVlID0gaW5wdXRUZXh0LAogICAgICAgICAgICAgICAgICAgIG9uVmFsdWVDaGFuZ2UgPSB7IGlucHV0VGV4dCA9IGl0IH0sCiAgICAgICAgICAgICAgICAgICAgbW9kaWZpZXIgPSBNb2RpZmllci53ZWlnaHQoMWYpLAogICAgICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyID0geyBUZXh0KCJNZXNzYWdlIikgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgSWNvbkJ1dHRvbigKICAgICAgICAgICAgICAgICAgICBvbkNsaWNrID0gewogICAgICAgICAgICAgICAgICAgICAgICB2YWwgdGV4dCA9IGlucHV0VGV4dAogICAgICAgICAgICAgICAgICAgICAgICBpbnB1dFRleHQgPSAiIgogICAgICAgICAgICAgICAgICAgICAgICB2aWV3TW9kZWwuc2VuZE1lc3NhZ2UodGV4dCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApIHsKICAgICAgICAgICAgICAgICAgICBJY29uKAogICAgICAgICAgICAgICAgICAgICAgICBJY29ucy5GaWxsZWQuU2VuZCwKICAgICAgICAgICAgICAgICAgICAgICAgY29udGVudERlc2NyaXB0aW9uID0gIlNlbmQiLAogICAgICAgICAgICAgICAgICAgICAgICB0aW50ID0gTWF0ZXJpYWxUaGVtZS5jb2xvclNjaGVtZS5wcmltYXJ5CiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQp9CgpAQ29tcG9zYWJsZQpwcml2YXRlIGZ1biBNb2RlbFN0YXR1c0NoaXAobGFiZWw6IFN0cmluZykgewogICAgU3VyZmFjZSgKICAgICAgICBjb2xvciA9IE1hdGVyaWFsVGhlbWUuY29sb3JTY2hlbWUuc3VyZmFjZVZhcmlhbnQsCiAgICAgICAgY29udGVudENvbG9yID0gTWF0ZXJpYWxUaGVtZS5jb2xvclNjaGVtZS5vblN1cmZhY2VWYXJpYW50LAogICAgICAgIHNoYXBlID0gUm91bmRlZENvcm5lclNoYXBlKHBlcmNlbnQgPSA1MCkKICAgICkgewogICAgICAgIFJvdygKICAgICAgICAgICAgbW9kaWZpZXIgPSBNb2RpZmllci5wYWRkaW5nKGhvcml6b250YWwgPSAxMC5kcCwgdmVydGljYWwgPSA0LmRwKSwKICAgICAgICAgICAgdmVydGljYWxBbGlnbm1lbnQgPSBBbGlnbm1lbnQuQ2VudGVyVmVydGljYWxseSwKICAgICAgICAgICAgaG9yaXpvbnRhbEFycmFuZ2VtZW50ID0gQXJyYW5nZW1lbnQuc3BhY2VkQnkoNi5kcCkKICAgICAgICApIHsKICAgICAgICAgICAgQm94KAogICAgICAgICAgICAgICAgbW9kaWZpZXIgPSBNb2RpZmllcgogICAgICAgICAgICAgICAgICAgIC5zaXplKDYuZHApCiAgICAgICAgICAgICAgICAgICAgLmJhY2tncm91bmQoTWF0ZXJpYWxUaGVtZS5jb2xvclNjaGVtZS5wcmltYXJ5LCBDaXJjbGVTaGFwZSkKICAgICAgICAgICAgKQogICAgICAgICAgICBUZXh0KGxhYmVsLCBzdHlsZSA9IE1hdGVyaWFsVGhlbWUudHlwb2dyYXBoeS5sYWJlbFNtYWxsKQogICAgICAgIH0KICAgIH0KfQoKLyoqCiAqIE1hcHMgYSByYXcgcHJvdmlkZXJVc2VkIHN0cmluZyAoc2V0IGJ5IE1vZGVsUm91dGVyLCBlLmcuICJnZW1pbmkiIG9yCiAqICJvcGVucm91dGVyOjxtb2RlbC1pZD4iKSB0byBhIHNob3J0IGxhYmVsIGZvciB0aGUgc3RhdHVzIGNoaXAuIEhhbmRsZXMgYm90aCB0aGUKICogY3VycmVudCAib3BlbnJvdXRlci9mcmVlIiBhdXRvLXJvdXRlciBpZCBhbmQgdGhlIHNwZWNpZmljIGhhbmQtcGlja2VkIG1vZGVsIHNsdWdzCiAqIChMbGFtYSAzLjEgNDA1QiAvIFF3ZW4zIENvZGVyIC8gZ3B0LW9zcy0xMjBiKSBmcm9tIHRoZSBmYWxsYmFjay1vcmRlcmluZyBkZWNpc2lvbiwKICogc28gdGhpcyBkb2Vzbid0IG5lZWQgYW5vdGhlciBlZGl0IG9uY2UgTW9kZWxSb3V0ZXIgaXMgdXBkYXRlZCB0byBtYXRjaCB0aGF0CiAqIGRlY2lzaW9uIChzZWUgbm90ZSBsZWZ0IGZvciB0aGF0IGZvbGxvdy11cCkuCiAqLwpwcml2YXRlIGZ1biBmcmllbmRseVByb3ZpZGVyTGFiZWwocmF3OiBTdHJpbmc/KTogU3RyaW5nIHsKICAgIGlmIChyYXcgPT0gbnVsbCB8fCByYXcgPT0gImdlbWluaSIpIHJldHVybiAiR2VtaW5pIgogICAgdmFsIG1vZGVsID0gcmF3LnJlbW92ZVByZWZpeCgib3BlbnJvdXRlcjoiKQogICAgcmV0dXJuIHdoZW4gewogICAgICAgIG1vZGVsLmNvbnRhaW5zKCJsbGFtYS0zLjEtNDA1YiIsIGlnbm9yZUNhc2UgPSB0cnVlKSAtPiAiTGxhbWEgMy4xIDQwNUIiCiAgICAgICAgbW9kZWwuY29udGFpbnMoInF3ZW4zLWNvZGVyIiwgaWdub3JlQ2FzZSA9IHRydWUpIC0+ICJRd2VuMyBDb2RlciIKICAgICAgICBtb2RlbC5jb250YWlucygiZ3B0LW9zcy0xMjBiIiwgaWdub3JlQ2FzZSA9IHRydWUpIC0+ICJncHQtb3NzLTEyMGIiCiAgICAgICAgZWxzZSAtPiAiT3BlblJvdXRlciIKICAgIH0KfQoKLy8gTG9uZy1wcmVzcyBhbnkgbWVzc2FnZSBidWJibGUgdG8gY29weSBpdHMgcmF3IHRleHQg4oCUIGFkZGVkIHNvIHVzZXJzIChhbmQgdGhlCi8vIG1vZGVsIGl0c2VsZiwgd2hlbiBhc2tlZCkgZG9uJ3QgbmVlZCB0byBoYW5kLXJvbGwgY29weSBsb2dpYyBwZXIgcGxhdGZvcm07IHRoZQovLyBtb2RlbCB3YXMgc3VnZ2VzdGluZyBuYXZpZ2F0b3IuY2xpcGJvYXJkL1JlYWN0IHNuaXBwZXRzIHRoYXQgZG9uJ3QgYXBwbHkgdG8gYQovLyBuYXRpdmUgQW5kcm9pZCBhcHAuIFVzZXMgQ29tcG9zZSdzIExvY2FsQ2xpcGJvYXJkTWFuYWdlciByYXRoZXIgdGhhbiB0aGUgcmF3Ci8vIENsaXBib2FyZE1hbmFnZXIgc3lzdGVtIHNlcnZpY2Ug4oCUIG5vIENvbnRleHQgYm9pbGVycGxhdGUgbmVlZGVkIGZvciBwbGFpbiB0ZXh0LgpAT3B0SW4oRXhwZXJpbWVudGFsRm91bmRhdGlvbkFwaTo6Y2xhc3MpCkBDb21wb3NhYmxlCnByaXZhdGUgZnVuIE1lc3NhZ2VCdWJibGUobWVzc2FnZTogTWVzc2FnZUVudGl0eSkgewogICAgdmFsIGlzVXNlciA9IG1lc3NhZ2Uucm9sZSA9PSAidXNlciIKICAgIHZhbCBjbGlwYm9hcmRNYW5hZ2VyID0gTG9jYWxDbGlwYm9hcmRNYW5hZ2VyLmN1cnJlbnQKICAgIHZhbCBjb250ZXh0ID0gTG9jYWxDb250ZXh0LmN1cnJlbnQKCiAgICBSb3coCiAgICAgICAgbW9kaWZpZXIgPSBNb2RpZmllci5maWxsTWF4V2lkdGgoKSwKICAgICAgICBob3Jpem9udGFsQXJyYW5nZW1lbnQgPSBpZiAoaXNVc2VyKSBBcnJhbmdlbWVudC5FbmQgZWxzZSBBcnJhbmdlbWVudC5TdGFydAogICAgKSB7CiAgICAgICAgQ2FyZCgKICAgICAgICAgICAgbW9kaWZpZXIgPSBNb2RpZmllcgogICAgICAgICAgICAgICAgLndpZHRoKDI2MC5kcCkKICAgICAgICAgICAgICAgIC5jb21iaW5lZENsaWNrYWJsZSgKICAgICAgICAgICAgICAgICAgICBvbkNsaWNrID0ge30sCiAgICAgICAgICAgICAgICAgICAgb25Mb25nQ2xpY2sgPSB7CiAgICAgICAgICAgICAgICAgICAgICAgIGNsaXBib2FyZE1hbmFnZXIuc2V0VGV4dChBbm5vdGF0ZWRTdHJpbmcobWVzc2FnZS5jb250ZW50KSkKICAgICAgICAgICAgICAgICAgICAgICAgVG9hc3QubWFrZVRleHQoY29udGV4dCwgIkNvcGllZCB0byBjbGlwYm9hcmQiLCBUb2FzdC5MRU5HVEhfU0hPUlQpLnNob3coKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICksCiAgICAgICAgICAgIGNvbG9ycyA9IHdoZW4gewogICAgICAgICAgICAgICAgbWVzc2FnZS5pc0Vycm9yIC0+IENhcmREZWZhdWx0cy5jYXJkQ29sb3JzKGNvbnRhaW5lckNvbG9yID0gTWF0ZXJpYWxUaGVtZS5jb2xvclNjaGVtZS5lcnJvckNvbnRhaW5lcikKICAgICAgICAgICAgICAgIGlzVXNlciAtPiBDYXJkRGVmYXVsdHMuY2FyZENvbG9ycyhjb250YWluZXJDb2xvciA9IE1hdGVyaWFsVGhlbWUuY29sb3JTY2hlbWUuc3VyZmFjZVZhcmlhbnQpCiAgICAgICAgICAgICAgICBlbHNlIC0+IENhcmREZWZhdWx0cy5jYXJkQ29sb3JzKCkKICAgICAgICAgICAgfQogICAgICAgICkgewogICAgICAgICAgICBDb2x1bW4obW9kaWZpZXIgPSBNb2RpZmllci5wYWRkaW5nKDEwLmRwKSkgewogICAgICAgICAgICAgICAgVGV4dChtZXNzYWdlLmNvbnRlbnQsIHN0eWxlID0gTWF0ZXJpYWxUaGVtZS50eXBvZ3JhcGh5LmJvZHlNZWRpdW0pCiAgICAgICAgICAgICAgICBpZiAoIWlzVXNlciAmJiBtZXNzYWdlLnByb3ZpZGVyVXNlZCAhPSBudWxsKSB7CiAgICAgICAgICAgICAgICAgICAgVGV4dCgKICAgICAgICAgICAgICAgICAgICAgICAgZnJpZW5kbHlQcm92aWRlckxhYmVsKG1lc3NhZ2UucHJvdmlkZXJVc2VkKSwKICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGUgPSBNYXRlcmlhbFRoZW1lLnR5cG9ncmFwaHkubGFiZWxTbWFsbCwKICAgICAgICAgICAgICAgICAgICAgICAgY29sb3IgPSBNYXRlcmlhbFRoZW1lLmNvbG9yU2NoZW1lLm9uU3VyZmFjZVZhcmlhbnQKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9Cn0K
+package com.ikogetech.ikogemind.ui.chat
+
+import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ikogetech.ikogemind.data.local.MessageEntity
+import com.ikogetech.ikogemind.data.repository.ChatRepository
+import com.ikogetech.ikogemind.pipeline.PipelineOrchestrator
+import com.ikogetech.ikogemind.ui.ViewModelFactories
+
+// Quick-action starter prompts for the empty ("New Chat") state — audience-specific
+// per brand-notes.md (coding / AI / cybersecurity), not generic Copilot-style chips
+// like "Write a first draft". Tapping fills the input rather than auto-sending, so
+// the person can edit before committing.
+private val QUICK_ACTIONS = listOf(
+    "Explain a concept" to "Can you explain ",
+    "Debug an error" to "Here's an error I'm getting: ",
+    "Review my code" to "Can you review this code: "
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChatScreen(
+    conversationId: String,
+    chatRepository: ChatRepository,
+    pipelineOrchestrator: PipelineOrchestrator,
+    onBack: () -> Unit,
+    onConversationIdAssigned: (String) -> Unit
+) {
+    val viewModel: ChatViewModel = viewModel(
+        factory = ViewModelFactories.chat(chatRepository, pipelineOrchestrator, conversationId)
+    )
+
+    val messages by viewModel.messages.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+    val activeConversationId by viewModel.activeConversationId.collectAsState()
+
+    // Once a "new chat" gets a real id on first send, tell the nav host so back-stack
+    // / conversation list stay in sync (screens-and-flows.md New Chat -> Chat Screen).
+    LaunchedEffect(activeConversationId) {
+        activeConversationId?.let { onConversationIdAssigned(it) }
+    }
+
+    var inputText by remember { mutableStateOf("") }
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(messages.size) {
+        if (messages.isNotEmpty()) listState.animateScrollToItem(messages.size - 1)
+    }
+
+    // Drives the model-status chip: the provider that actually served the most
+    // recent assistant reply, or the v1 default (Gemini, per model-routing.md)
+    // before any reply has come back yet. Not a picker — v1 is global-default-only
+    // (see decisions log), so this is status, not a control.
+    val currentProviderLabel = remember(messages) {
+        friendlyProviderLabel(messages.lastOrNull { it.role == "assistant" && it.providerUsed != null }?.providerUsed)
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Chat") },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            if (messages.isEmpty()) {
+                // Chat screen "Empty" state — doubles as the "New Chat" screen from
+                // screens-and-flows.md; there's no separate NewChatScreen file.
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        "What can I help you with?",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Text(
+                        "Ask about code, security, or anything else.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
+                    )
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        items(QUICK_ACTIONS) { (label, starter) ->
+                            AssistChip(
+                                onClick = { inputText = starter },
+                                label = { Text(label) }
+                            )
+                        }
+                    }
+                }
+            } else {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                        .padding(horizontal = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(messages, key = { it.id }) { message ->
+                        MessageBubble(message)
+                    }
+                }
+            }
+
+            // "Streaming" state (ModelStep is non-streaming in v1, see ChatUiState note)
+            if (uiState is ChatUiState.Waiting) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            // "Error" / "Rate-limited" states — note which provider failed, per
+            // screens-and-flows.md ("show retry, note which provider failed")
+            val state = uiState
+            if (state is ChatUiState.Error) {
+                Text(
+                    text = if (state.isRateLimit)
+                        "Rate limit hit on the current provider. ${state.message}"
+                    else
+                        "Something went wrong: ${state.message}",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            // Model status chip — one quiet indicator, not a dropdown/selector.
+            Row(
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                ModelStatusChip(currentProviderLabel)
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    value = inputText,
+                    onValueChange = { inputText = it },
+                    modifier = Modifier.weight(1f),
+                    placeholder = { Text("Message") }
+                )
+                IconButton(
+                    onClick = {
+                        val text = inputText
+                        inputText = ""
+                        viewModel.sendMessage(text)
+                    }
+                ) {
+                    Icon(
+                        Icons.Filled.Send,
+                        contentDescription = "Send",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ModelStatusChip(label: String) {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        shape = RoundedCornerShape(percent = 50)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(6.dp)
+                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+            )
+            Text(label, style = MaterialTheme.typography.labelSmall)
+        }
+    }
+}
+
+/**
+ * Maps a raw providerUsed string (set by ModelRouter, e.g. "gemini" or
+ * "openrouter:<model-id>") to a short label for the status chip. Handles both the
+ * current "openrouter/free" auto-router id and the specific hand-picked model slugs
+ * (Llama 3.1 405B / Qwen3 Coder / gpt-oss-120b) from the fallback-ordering decision,
+ * so this doesn't need another edit once ModelRouter is updated to match that
+ * decision (see note left for that follow-up).
+ */
+private fun friendlyProviderLabel(raw: String?): String {
+    if (raw == null || raw == "gemini") return "Gemini"
+    val model = raw.removePrefix("openrouter:")
+    return when {
+        model.contains("llama-3.1-405b", ignoreCase = true) -> "Llama 3.1 405B"
+        model.contains("qwen3-coder", ignoreCase = true) -> "Qwen3 Coder"
+        model.contains("gpt-oss-120b", ignoreCase = true) -> "gpt-oss-120b"
+        else -> "OpenRouter"
+    }
+}
+
+// Long-press any message bubble to copy its raw text — added so users (and the
+// model itself, when asked) don't need to hand-roll copy logic per platform; the
+// model was suggesting navigator.clipboard/React snippets that don't apply to a
+// native Android app. Uses Compose's LocalClipboardManager rather than the raw
+// ClipboardManager system service — no Context boilerplate needed for plain text.
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun MessageBubble(message: MessageEntity) {
+    val isUser = message.role == "user"
+    val clipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
+    ) {
+        Card(
+            modifier = Modifier
+                .width(260.dp)
+                .combinedClickable(
+                    onClick = {},
+                    onLongClick = {
+                        clipboardManager.setText(AnnotatedString(message.content))
+                        Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+                    }
+                ),
+            colors = when {
+                message.isError -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+                isUser -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                else -> CardDefaults.cardColors()
+            }
+        ) {
+            Column(modifier = Modifier.padding(10.dp)) {
+                Text(message.content, style = MaterialTheme.typography.bodyMedium)
+                if (!isUser && message.providerUsed != null) {
+                    Text(
+                        friendlyProviderLabel(message.providerUsed),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    }
+}
