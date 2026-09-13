@@ -29,7 +29,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Send
@@ -69,6 +68,7 @@ import com.ikogetech.ikogemind.data.local.MessageEntity
 import com.ikogetech.ikogemind.data.repository.ChatRepository
 import com.ikogetech.ikogemind.pipeline.PipelineOrchestrator
 import com.ikogetech.ikogemind.ui.ViewModelFactories
+import com.ikogetech.ikogemind.ui.theme.ContentCopyIcon
 import com.ikogetech.ikogemind.ui.theme.GlassSurface
 import com.ikogetech.ikogemind.ui.theme.IkogeAccent
 import com.ikogetech.ikogemind.ui.theme.IkogePillShape
@@ -442,12 +442,12 @@ private fun MessageBubble(
 
 /**
  * The assistant-message action row from the reference design: copy, share,
- * read-aloud, thumbs up, thumbs down, regenerate. Every icon except thumbs-down
- * comes from material-icons-core (already a dependency, confirmed against the
- * material-icons-core bug that broke the build earlier) — ThumbDown isn't in core,
- * so it's rendered as a 180°-rotated ThumbUp instead of pulling in the much larger
- * material-icons-extended for one icon. Selected thumb tint animates in/out rather
- * than snapping, matching the softer motion language of the rest of the overhaul.
+ * read-aloud, thumbs up, thumbs down, regenerate. Copy uses the hand-drawn
+ * ContentCopyIcon (see ui/theme/Icons.kt) and thumbs-down is a 180°-rotated
+ * ThumbUp — both work around the same constraint: this project deliberately
+ * sticks to material-icons-core, and neither glyph lives there. Selected thumb
+ * tint animates in/out rather than snapping, matching the softer motion language
+ * of the rest of the overhaul.
  */
 @Composable
 private fun MessageActionsRow(
@@ -476,7 +476,7 @@ private fun MessageActionsRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onCopy, modifier = Modifier.size(buttonSize)) {
-            Icon(Icons.Filled.ContentCopy, contentDescription = "Copy", modifier = Modifier.size(iconSize))
+            Icon(ContentCopyIcon, contentDescription = "Copy", modifier = Modifier.size(iconSize))
         }
         IconButton(onClick = onShare, modifier = Modifier.size(buttonSize)) {
             Icon(Icons.Filled.Share, contentDescription = "Share", modifier = Modifier.size(iconSize))
