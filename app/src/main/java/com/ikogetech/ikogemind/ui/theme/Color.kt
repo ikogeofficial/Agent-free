@@ -19,3 +19,12 @@ val IkogeErrorContainer = Color(0xFF2A1416)
 // Used only by GlassSurface's border gradient — a thin bright-to-transparent
 // stroke starting from the top-left corner, never a flat frosted overlay.
 val IkogeGlassHighlight = Color(0xFFFFFFFF)
+
+// Home screen hero orb — settled visual direction per decisions-log.md ("blue
+// color palette, glossy swirl-ring orb animation as hero graphic"). Three tones
+// build the glossy-sphere illusion in OrbHero.kt: a deep navy sphere base, a
+// bright cyan-blue rim light for the rotating swirl arcs, and a softer indigo
+// halo that bleeds outward into the black background behind it.
+val IkogeOrbDeep = Color(0xFF07142E)
+val IkogeOrbGlow = Color(0xFF5CC8FF)
+val IkogeOrbHalo = Color(0xFF2B62FF)
