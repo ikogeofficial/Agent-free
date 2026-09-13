@@ -34,6 +34,13 @@ class ModelRouterException(message: String, val isRateLimit: Boolean) : Exceptio
  *    whichever of the three keys is available, so one retired slug doesn't
  *    dead-end the user.
  * 4. Caller (ModelStep) persists which provider actually served the response.
+ *
+ * Every call also carries a "system" turn (added by ModelStep) telling the model
+ * it's running inside this native Android app rather than a website. OpenRouter's
+ * OpenAI-style /chat/completions endpoint takes that as a normal role="system"
+ * message in the array, so callOpenRouter passes it through unchanged. Gemini's
+ * REST API instead wants it as a separate top-level `systemInstruction` field, so
+ * callGemini below splits it out of the turn list before building the request.
  */
 class ModelRouter(private val settingsRepository: SettingsRepository) {
 
@@ -138,12 +145,23 @@ class ModelRouter(private val settingsRepository: SettingsRepository) {
     }
 
     private suspend fun callGemini(apiKey: String, history: List<ChatTurn>): ModelResult {
+        // Gemini wants the system prompt as a separate top-level field, not a turn
+        // inside `contents` — pull any "system" turns out and join them (there's
+        // normally just the one from ModelStep) rather than mis-mapping them to
+        // role="user", which would confuse the model and waste context.
+        val systemText = history.filter { it.role == "system" }
+            .joinToString("\n\n") { it.content }
+        val conversationTurns = history.filterNot { it.role == "system" }
+
         val request = GeminiRequest(
-            contents = history.map {
+            contents = conversationTurns.map {
                 GeminiContent(
                     role = if (it.role == "assistant") "model" else "user",
                     parts = listOf(GeminiPart(text = it.content))
                 )
+            },
+            systemInstruction = systemText.takeIf { it.isNotBlank() }?.let {
+                GeminiSystemInstruction(parts = listOf(GeminiPart(text = it)))
             }
         )
         val response = geminiApi.generateContent(
@@ -162,6 +180,8 @@ class ModelRouter(private val settingsRepository: SettingsRepository) {
     }
 
     private suspend fun callOpenRouter(apiKey: String, model: String, history: List<ChatTurn>): ModelResult {
+        // OpenRouter's OpenAI-compatible endpoint accepts role="system" directly
+        // inside `messages`, so the system turn from ModelStep passes through as-is.
         val response = openRouterApi.chatCompletion(
             bearerToken = "Bearer $apiKey",
             request = OpenRouterRequest(
