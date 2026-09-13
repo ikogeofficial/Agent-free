@@ -89,4 +89,54 @@ class ChatViewModel(
             }
         }
     }
+
+    /**
+     * Re-runs the pipeline for the user message that produced [assistantMessageId],
+     * replacing that assistant reply. Walks backward through the current message list
+     * to find the nearest preceding user message rather than storing a parent-message
+     * pointer — v1 has no branching/multi-reply model, so "nearest prior user message"
+     * is always the right one.
+     */
+    fun regenerate(assistantMessageId: String) {
+        val convId = conversationId ?: return
+        val currentMessages = messages.value
+        val index = currentMessages.indexOfFirst { it.id == assistantMessageId }
+        if (index <= 0) return
+        val userMessage = currentMessages.take(index).lastOrNull { it.role == "user" } ?: return
+
+        viewModelScope.launch {
+            _uiState.value = ChatUiState.Waiting
+            chatRepository.deleteMessage(assistantMessageId)
+
+            val result = pipelineOrchestrator.run(convId, userMessage.content)
+
+            if (result.error != null) {
+                chatRepository.addMessage(
+                    convId,
+                    role = "assistant",
+                    content = result.error.message,
+                    isError = true
+                )
+                _uiState.value = ChatUiState.Error(
+                    message = result.error.message,
+                    isRateLimit = result.error.isRateLimit
+                )
+            } else {
+                chatRepository.addMessage(
+                    convId,
+                    role = "assistant",
+                    content = result.formattedOutput ?: result.rawModelOutput.orEmpty(),
+                    providerUsed = result.providerUsed
+                )
+                _uiState.value = ChatUiState.Idle
+            }
+        }
+    }
+
+    /** Tapping an already-selected thumb again clears it — handled by the caller passing null. */
+    fun setFeedback(messageId: String, feedback: String?) {
+        viewModelScope.launch {
+            chatRepository.setFeedback(messageId, feedback)
+        }
+    }
 }
